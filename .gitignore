@@ -1,0 +1,21 @@
+event_env/
+__pycache__
+db.sqlite3
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Django
+*.sqlite3
+/media
+/staticfiles
+.env
+
+# Virtual Environment
+event_env/
+venv/
+env/
+
+# VSCode
+.vscode/
