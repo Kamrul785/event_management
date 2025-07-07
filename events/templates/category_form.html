@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %} Create Category {% endblock %}
+
+{% block content %}
+
+    <h1 class="text-3xl font-semibold text-gray-800 mb-6">Create Category</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="flex items-center justify-center">
+            <div class="w-full sm:w-1/2 p-6 bg-white rounded-lg shadow-md">
+                <div class="mb-4">
+                    <h3 class="text-lg font-semibold mb-2"> Category Name</h3>
+                    <p>{{ category_form.name }} </p>
+                </div>
+
+                <div class="mb-4">
+                    <h3 class="text-lg font-semibold mb-2"> Description</h3>
+                    <p>{{ category_form.description }} </p>
+                </div>
+                <div class="mb-4">
+                    <button type="submit" class="bg-orange-500 text-white px-6 py-2 rounded-md shadow-sm hover:shadow-lg cursor-pointer">
+                        Save
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock  %}

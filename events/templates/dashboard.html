@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+
+{% block title %}Event Management Dashboard{% endblock %}
+
+{% block content %}
+    <h1 class="text-3xl font-semibold text-gray-800 mb-6">Organizer Dashboard</h1>
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+        {% comment %} total event card  {% endcomment %}
+        <a href="{% url 'dashboard' %}?type=all">
+            <div class="group bg-white p-6 rounded-lg shadow-lg hover:shadow-xl hover:bg-orange-400 transition-all duration-300">
+                <h3 class="text-sm font-medium text-gray-500 mb-4 group-hover:text-white">Total Events</h3>
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="text-3xl font-semibold text-gray-800 group-hover:text-white">{{ counts.total_events }}</p>
+                        <p class="text-gray-500 text-sm group-hover:text-white">Total events in the system</p>
+                    </div>
+                    <div class="bg-blue-100 p-3 rounded-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6 text-blue-600 group-hover:stroke-black">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5l7 7-7 7M5 5l7 7-7 7" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </a>
+        {% comment %} upcoming event card {% endcomment %}
+        <a href="{% url 'dashboard' %}?type=upcoming">
+            <div class="group bg-white p-6 rounded-lg shadow-lg hover:shadow-xl hover:bg-orange-400 transition-all duration-300">
+                <h3 class="text-sm font-medium text-gray-500 mb-4 group-hover:text-white">Upcoming Events</h3>
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="text-3xl font-semibold text-gray-800 group-hover:text-white">{{ counts.upcoming_events }}</p>
+                        <p class="text-gray-500 text-sm group-hover:text-white">Events scheduled to occur</p>
+                    </div>
+                    <div class="bg-green-100 p-3 rounded-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-green-600 group-hover:stroke-black">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15M12 9l3 3m0 0-3 3m3-3H2.25" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </a>
+        {% comment %} past event card {% endcomment %}
+        <a href="{% url 'dashboard' %}?type=past">
+            <div class="group bg-white p-6 rounded-lg shadow-lg hover:shadow-xl hover:bg-orange-400 transition-all duration-300">
+                <h3 class="text-sm font-medium group-hover:text-white text-gray-500 mb-4">Past Events</h3>
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="text-3xl font-semibold group-hover:text-white text-gray-800">{{ counts.past_events }}</p>
+                        <p class="text-gray-500 group-hover:text-white text-sm">Events that have already occurred</p>
+                    </div>
+                    <div class="bg-red-100 p-3 rounded-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-red-600 group-hover:stroke-black">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M11.35 3.836c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m8.9-4.414c.376.023.75.05 1.124.08 1.131.094 1.976 1.057 1.976 2.192V16.5A2.25 2.25 0 0 1 18 18.75h-2.25m-7.5-10.5H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V18.75m-7.5-10.5h6.375c.621 0 1.125.504 1.125 1.125v9.375m-8.25-3 1.5 1.5 3-3.75" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </a>
+        {% comment %} total participaiton card  {% endcomment %}
+        <a href="../participant_list">
+            <div class="group bg-white p-6 rounded-lg shadow-lg hover:shadow-2xl hover:bg-orange-400 transition-all duration-300">
+                <h3 class="text-sm font-medium text-gray-500 mb-4 group-hover:text-white">Total Participants</h3>
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="text-3xl font-semibold text-gray-800 group-hover:text-white">{{ total_participants }}</p>
+                        <p class="text-gray-500 text-sm group-hover:text-white">Participants across all events</p>
+                    </div>
+                    <div class="bg-yellow-100 p-3 rounded-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-yellow-600 group-hover:stroke-black">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </a>
+
+    </div>
+
+    {% comment %} today's event  {% endcomment %}
+    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Today's Events</h2>
+    <div class="overflow-x-auto bg-white p-6 rounded-lg shadow-md">
+        {% if today_events %}
+            <table class="min-w-full bg-white text-left">
+                <thead>
+                    <tr>
+                        <th class="py-3 px-6 border-b text-left">Event Name</th>
+                        <th class="py-3 px-6 border-b text-center">Category</th>
+                        <th class="py-3 px-6 border-b text-center">Location</th>
+                        <th class="py-3 px-10 border-b text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for event in today_events %}
+                    <tr class="hover:bg-gray-100">
+                        <td class="py-3 px-6 border-b text-left">{{ event.name }}</td>
+                        <td class="py-3 px-6 border-b text-center">{{ event.category.name }}</td>
+                        <td class="py-3 px-6 border-b text-center">{{ event.location }}</td>
+                        <td class="py-3 px-6 border-b text-center">
+                            <a href="{% url 'event_detail' event.id %}" class="text-blue-600 px-2 py-1 hover:shadow-md rounded-md hover:bg-blue-500 hover:text-white">Details</a> |
+                            <a href="{% url 'event_update' event.id %}" class="text-green-600 px-2 py-1 hover:shadow-md rounded-md hover:bg-green-500 hover:text-white">Edit</a> |
+                            <form method="POST" action="{% url 'event_delete' event.id %}" class="inline-block">
+                                {% csrf_token %}
+                                <button class="text-red-600 px-2 py-1 hover:shadow-md rounded-md hover:bg-red-500 hover:text-white">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+        {% if not today_events %}
+            <p class="font-medium text-md ">No events scheduled for today..</p>
+        {% endif %}
+    </div>
+
+    {% comment %} Event List  {% endcomment %}
+    <h2 class="text-2xl font-semibold text-gray-800 mt-6 mb-4">Event List</h2>
+    <div class="overflow-x-auto shadow rounded-lg bg-white ">
+        <table class="min-w-full bg-white text-left">
+            <thead>
+                <tr>
+                    <th class="py-3 px-6 border-b text-left">Event Name</th>
+                    <th class="py-3 px-6 border-b text-center">Category</th>
+                    <th class="py-3 px-6 border-b text-center">Location</th>
+                    <th class="py-3 px-10 border-b text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for event in events %}
+                <tr class="hover:bg-gray-100">
+                    <td class="py-3 px-6 border-b text-left">{{ event.name }}</td>
+                    <td class="py-3 px-6 border-b text-center">{{ event.category.name }}</td>
+                    <td class="py-3 px-6 border-b text-center">{{ event.location }}</td>
+                    <td class="py-3 px-6 border-b text-center">
+                        <a href="{% url 'event_detail' event.id %}" class="text-blue-600 px-2 py-1 hover:shadow-md rounded-md hover:bg-blue-500 hover:text-white">Details</a> |
+                        <a href="{% url 'event_update' event.id %}" class="text-green-600 px-2 py-1 hover:shadow-md rounded-md hover:bg-green-500 hover:text-white">Edit</a> |
+                          <form method="POST" action="{% url 'event_delete' event.id %}" class="inline-block">
+                            {% csrf_token %}
+                            <button class="text-red-600 px-2 py-1 hover:shadow-md rounded-md hover:bg-red-500 hover:text-white">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+{% endblock %}
+

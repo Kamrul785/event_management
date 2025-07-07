@@ -1,16 +1,57 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+{% extends 'base.html' %}
 
-</head>
-<body>
-   
-    
-   
-</body>
-</html>
+{% block title %}Create Event{% endblock %}
+
+{% block content %}
+    <div>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="px-2 py-1 {% if message.tags == 'success' %} bg-green-500{% endif%}"> {{message}} </div>
+            {% endfor %}
+            
+        {% endif %}
+    </div>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="flex items-center justify-center">
+            <div class="w-full sm:w-1/2 p-6 bg-white rounded-lg shadow-md">
+                {% comment %} Event form  {% endcomment %}
+                <div class="mb-4">
+                    <h3 class="text-lg font-semibold mb-2"> Event Name</h3>
+                    <p>{{ event_form.name }} </p>
+                </div>
+
+                <div class="mb-4">
+                    <h3 class="text-lg font-semibold mb-2"> Description</h3>
+                    <p>{{ event_form.description }} </p>
+                </div>
+
+                <div class="mb-4 flex justify-start">
+                    <h3 class="text-lg font-semibold mb-2">Date: </h3>
+                    <p class="ms-2">{{ event_form.date }}</p>
+                </div>
+
+                <div class="mb-4 flex justify-start">
+                    <h3 class="text-lg font-semibold mb-2">Time: </h3>
+                    <p class="ms-2">{{ event_form.time }}</p>
+                </div>
+
+                <div class="mb-4">
+                    <h3 class="text-lg font-semibold mb-2">Location</h3>
+                    <p> {{ event_form.location }} </p>
+                </div>
+
+                <div class="mb-4 flex ">
+                    <h3 class="text-lg font-semibold"> Category: </h3>
+                    <p class="border border-gray-200 rounded-sm ms-2 shadow-lg">{{ event_form.category }} </p>
+                </div>
+
+                <div class="mb-4">
+                    <button type="submit" class="bg-orange-500 cursor-pointer text-white px-6 py-2 rounded-lg shadow-sm hover:shadow-lg transition duration-300">
+                        Save Event
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock %}

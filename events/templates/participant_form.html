@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Participant{% endblock %}
+
+{% block content %}
+
+        <div>
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="px-2 py-1 {% if message.tags == 'success' %} bg-green-500{% endif%}"> {{message}} </div>
+                {% endfor %}
+                
+            {% endif %}
+        </div>
+        
+        <form method="POST">
+            {% csrf_token %}
+            <div class="flex items-center justify-center">
+                <div class="w-full sm:w-1/2 p-6 bg-white rounded-lg shadow-md">
+                    <div class="mb-4">
+                        <h3 class="text-lg font-semibold mb-2"> Participant Name: </h3>
+                        <p> {{ participant_form.name }} </p>
+                    </div>
+
+                    <div class="mb-4">
+                        <h3 class="text-lg font-semibold mb-2"> Email: </h3>
+                        <p class="">{{ participant_form.email }} </p>
+                    </div>
+
+                    <div class="mb-4 flex justify-start">
+                        <h3 class="text-lg font-semibold mb-2">Event: </h3>
+                        <p class="ms-2">{{ participant_form.event }}</p>
+                    </div>
+                    <div class="mb-4">
+                        <button type="submit" class="bg-orange-500 text-white px-4 py-2 shadow-lg cursor-pointer rounded-md mt-4">
+                            Save Participant
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+        </form>
+
+{% endblock %}

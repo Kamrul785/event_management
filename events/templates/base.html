@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Management</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+    <!-- Navigation Bar -->
+    <nav class="bg-orange-400 p-4 shadow-md">
+        <div class="max-w-[1400px] mx-auto flex justify-between items-center">
+            <a href="{% url 'home' %}" class="text-white text-2xl font-semibold">Event Management</a>
+            <div class="space-x-6">
+                <a href="{% url 'home' %}" class="text-white font-semibold hover:bg-orange-600 px-4 py-2 rounded">Home</a>
+                <a href="{% url 'event_list' %}" class="text-white font-semibold hover:bg-orange-600 px-4 py-2 rounded">Events</a>
+                <a href="{% url 'category_list' %}" class="text-white font-semibold hover:bg-orange-600 px-4 py-2 rounded">Categories</a>
+                <a href="{% url 'participant_list' %}" class="text-white font-semibold hover:bg-orange-600 px-4 py-2 rounded">Participants</a>
+                <a href="{% url 'dashboard' %}" class="text-white font-semibold hover:bg-orange-600 px-4 py-2 rounded">Dashboard</a>
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="container max-w-[1400px] mx-auto py-6">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+</body>
+
+</html>
