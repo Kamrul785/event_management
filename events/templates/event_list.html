@@ -58,7 +58,7 @@
                     <td class="py-3 px-6 border-b text-center">
                         <a href="{% url 'event_detail' event.id %}" class="text-blue-600 px-2 py-1 hover:shadow-md rounded-md hover:bg-blue-500 hover:text-white">Details</a> |
                         <a href="{% url 'event_update' event.id %}" class="text-green-600 px-2 py-1 hover:shadow-md rounded-md hover:bg-green-500 hover:text-white">Edit</a> |
-                          <form method="POST" action="{% url 'event_delete' event.id %}" class="inline-block">
+                        <form method="POST" action="{% url 'event_delete' event.id %}" class="inline-block">
                             {% csrf_token %}
                             <button class="text-red-600 px-2 py-1 hover:shadow-md rounded-md hover:bg-red-500 hover:text-white">Delete</button>
                         </form>

@@ -23,7 +23,10 @@
                     <td class="py-2 px-4 border-b text-center">{{ participant.num_event}}</td>
                     <td class="py-2 px-4 border-b text-center">
                         <a href="{% url 'participant_update' participant.id %}" class="text-green-600 px-2 py-1 hover:shadow-md rounded-md hover:bg-green-500 hover:text-white">Edit</a> |
-                        <a href="{% url 'participant_delete' participant.id %}" class="text-red-600 px-2 py-1 hover:shadow-md rounded-md hover:bg-red-500 hover:text-white">Delete</a>
+                        <form method="POST" action="{% url 'participant_delete' participant.id %}" class="inline-block">
+                            {% csrf_token %}
+                            <button class="text-red-600 px-2 py-1 hover:shadow-md rounded-md hover:bg-red-500 hover:text-white">Delete</button>
+                        </form>
                     </td>
                 </tr>
                 {% endfor %}
