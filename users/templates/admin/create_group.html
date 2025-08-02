@@ -1,0 +1,16 @@
+{% extends 'admin/dashboard.html' %}
+{% block content %}
+    <div class="max-w-md mx-auto mt-6 p-6 bg-white shadow-md rounded-lg">
+        {% if messages %}
+            {% for message in messages %}
+                <p class="mb-2 {% if message.tags == 'error' %}text-red-600{% else %}bg-green-600 text-white{% endif %}">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+        <form method="POST" class="space-y-4">
+            {% csrf_token %}
+            {{ form }}
+            <button type="submit" class="px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 focus:outline-none">Create Group</button>
+        </form>
+        <a href="{% url 'admin_dashboard' %}" class="mt-4 inline-block px-4 py-2 border-2 border-gray-300 rounded-lg hover:bg-gray-100">Back to Dashboard</a>
+    </div>
+{% endblock content %}

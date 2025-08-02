@@ -1,17 +1,18 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
-from events.models import Category,Event,Participant
-from events.forms import CategoryModelForm, EventModelForm, participantModelForm, EventFilterForm
+from events.models import Category,Event
+from events.forms import CategoryModelForm, EventModelForm, EventFilterForm
 from datetime import date
 from django.db.models import Q , Min,Max,Count
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required,user_passes_test, permission_required
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.contrib.auth.models import User
+def is_organizer(user):
+    return user.groups.filter(name='Organizer').exists()
 
-def test(request):
-    context = {
-        "names" : ["Kamrul" , "Hasan" , "Sakil" , "Uddin"],
-        "age" : 23 
-    }
-    return render(request, 'test.html' , context)
+def is_participant(user):
+    return user.groups.filter(name='Participant').exists()
 
 def home(request):
     search_item = request.GET.get('search', '')  
@@ -26,7 +27,8 @@ def home(request):
     }
     return render(request, 'home.html', context)
 
-def dashboard(request):
+@user_passes_test(is_organizer, login_url='no_permission')
+def organizer_dashboard(request):
     
     type = request.GET.get('type','all')
     
@@ -35,7 +37,7 @@ def dashboard(request):
         upcoming_events=Count('id', filter=Q(date__gte=date.today())),
         past_events=Count('id', filter=Q(date__lt=date.today())), 
     )
-    total_participants = Participant.objects.count()
+    total_participants = User.objects.count()
     today_events = Event.objects.filter(date = date.today())
     
     if type == 'upcoming':
@@ -45,6 +47,7 @@ def dashboard(request):
     else:
         events = Event.objects.all().annotate(num_participant=Count('participants')).all()
     
+    
     context = {
         'counts' : counts,
         'total_participants': total_participants,
@@ -53,8 +56,14 @@ def dashboard(request):
         'type' : type
     }
     
-    return render(request, 'dashboard.html', context)
+    return render(request, 'organizer_dashboard.html', context)
 
+@user_passes_test(is_participant, login_url='no_permission')
+def participant_dashboard(request):
+    return render(request, 'participant_dashboard.html')
+
+@login_required
+@permission_required('events.view_event', login_url='no_permission')
 def event_list(request):
     events = Event.objects.select_related('category').annotate(num_participant=Count('participants')).all()
     filter_form = EventFilterForm(request.GET)
@@ -71,7 +80,7 @@ def event_list(request):
         if end_date:
             events = events.filter(date__lte=end_date)
             
-    total_participants = Participant.objects.count()
+    total_participants = User.objects.count()
 
     context = {
         'events': events, 
@@ -80,15 +89,21 @@ def event_list(request):
     }
     return render(request, 'event_list.html' , context )
 
+
+@login_required
+@permission_required('events.view_event', login_url='no_permission')
 def event_detail(request, id):
     event = Event.objects.get(id = id)  
     return render(request, 'event_detail.html', {'event':event})
 
+
+@login_required
+@permission_required('events.add_event', login_url='no_permission')
 def event_create(request):
     event_form = EventModelForm()
     
     if request.method == "POST":
-        event_form = EventModelForm(request.POST)
+        event_form = EventModelForm(request.POST, request.FILES)
         if event_form.is_valid():
             event_form.save()
             messages.success(request, "Event Created Successfully")
@@ -96,6 +111,9 @@ def event_create(request):
         
     return render(request, 'event_form.html', {'event_form': event_form})
 
+
+@login_required
+@permission_required('events.change_event', login_url='no_permission')
 def event_update(request,id):
     event = Event.objects.get(id=id)
     event_form = EventModelForm(instance = event)
@@ -107,7 +125,10 @@ def event_update(request,id):
             messages.success(request, "Event Updated Successfully")
         
     return render(request, 'event_form.html', {'event_form' : event_form , 'event' : event})
-        
+
+
+@login_required
+@permission_required('events.delete_event', login_url='no_permission')
 def event_delete(request,id):
     if request.method == "POST":
         event = Event.objects.get(id = id)
@@ -118,16 +139,22 @@ def event_delete(request,id):
         messages.error(request,"Event not deleted")
         return redirect('event_list')
 
+
+@login_required
+@permission_required('events.view_participant', login_url='no_permission')
 def participant_list(request):
-    participants = Participant.objects.annotate(num_event=Count('event')).all()
+    participants = User.objects.annotate(num_event=Count('event')).all()
     context = {'participants': participants}
     return render(request, 'participant_list.html', context)
 
+
+@login_required
+@permission_required('events.add_user', login_url='no_permission')
 def participant_create(request):
-    participant_form = participantModelForm()
+    participant_form = UserCreationForm()
     
     if request.method == "POST":
-        participant_form = participantModelForm(request.POST)
+        participant_form = UserCreationForm(request.POST)
         if participant_form.is_valid():
             participant_form.save()
             messages.success(request, "Participant Created Successfully")
@@ -135,12 +162,15 @@ def participant_create(request):
     
     return render(request, 'participant_form.html', {'participant_form': participant_form})
 
+
+@login_required
+@permission_required('events.change_participant', login_url='no_permission')
 def participant_update(request, id):
-    participant = Participant.objects.get(id=id)
-    participant_form = participantModelForm(instance=participant)
+    participant = User.objects.get(id=id)
+    participant_form = UserChangeForm(instance=participant)
     
     if request.method == "POST":
-        participant_form = participantModelForm(request.POST, instance=participant)
+        participant_form = UserChangeForm(request.POST, instance=participant)
         if participant_form.is_valid():
             participant_form.save()
             messages.success(request, "Participant Updated Successfully")
@@ -148,9 +178,12 @@ def participant_update(request, id):
     
     return render(request, 'participant_form.html', {'participant_form': participant_form})
 
+
+@login_required
+@permission_required('events.delete_participant', login_url='no_permission')
 def participant_delete(request, id):    
     if request.method == "POST":
-        participant = Participant.objects.get(id=id)
+        participant = User.objects.get(id=id)
         participant.delete()
         messages.success(request, "Participant Deleted Successfully")
         return redirect('participant_list')
@@ -158,11 +191,17 @@ def participant_delete(request, id):
         messages.error(request,"Something Went Wrong")
         return redirect('participant_list')
 
+
+@login_required
+@permission_required('events.view_catagory', login_url='no_permission')
 def category_list(request):
     categories = Category.objects.all()
     
     return render(request, 'category_list.html', {'categories' : categories})
 
+
+@login_required
+@permission_required('events.add_catagory', login_url='no_permission')
 def category_create(request):
     category_form = CategoryModelForm()
     
@@ -175,6 +214,9 @@ def category_create(request):
         
     return render(request, 'category_form.html', {'category_form' : category_form})
 
+
+@login_required
+@permission_required('events.change_catagory', login_url='no_permission')
 def category_update(request,id):
     category = Category.objects.get(id = id)
     category_form = CategoryModelForm(instance = category)
@@ -188,6 +230,9 @@ def category_update(request,id):
         
     return render(request, 'category_form.html', {'category_form' : category_form})
 
+
+@login_required
+@permission_required('events.delete_catagory', login_url='no_permission')
 def category_delete(request,id):
     category = Category.objects.get(id=id)
     if request.method == "POST" :

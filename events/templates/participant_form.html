@@ -16,10 +16,13 @@
         <form method="POST">
             {% csrf_token %}
             <div class="flex items-center justify-center">
+
+
                 <div class="w-full sm:w-1/2 p-6 bg-white rounded-lg shadow-md">
                     <div class="mb-4">
                         <h3 class="text-lg font-semibold mb-2"> Participant Name: </h3>
-                        <p> {{ participant_form.name }} </p>
+                        <p>Fist name:  {{ participant_form.username}} </p>
+
                     </div>
 
                     <div class="mb-4">

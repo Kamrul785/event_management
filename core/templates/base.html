@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Event Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+    
+    
+    {% if request.user.is_authenticated %}
+        {% include 'logged_nav.html' %}
+    {% else %}
+        {% include 'non_logged_nav.html' %}
+    {% endif %}
+        
+
+    <main class="container max-w-[1400px] mx-auto py-6">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <script>
+        function toggleDropdown() {
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.classList.toggle('hidden');
+        }
+
+        // Hide dropdown on outside click
+        document.addEventListener('click', function(event) {
+            const button = document.getElementById('userDropdownBtn');
+            const dropdown = document.getElementById('userDropdown');
+            if (!button.contains(event.target) && !dropdown.contains(event.target)) {
+                dropdown.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
