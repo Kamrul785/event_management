@@ -1,7 +1,7 @@
     <nav class="bg-orange-500 p-4 shadow-md">
         <div class="flex justify-between items-center">
             
-            <a href="{% url 'home' %}" class="text-white text-2xl font-semibold">Event Management</a>
+            <a href="{% url 'home' %}" class="text-white text-2xl font-semibold">Eventzilla</a>
 
             <div class="flex space-x-6">
                 <a href="{% url 'home' %}" class="text-white font-semibold hover:bg-orange-600 px-4 py-2 rounded">Home</a>
@@ -14,7 +14,9 @@
             <div class="relative ml-6">
                     <button onclick="toggleDropdown()" id="userDropdownBtn"
                         class="flex items-center space-x-2 text-white font-semibold focus:outline-none">
-                        <img src="#" alt="Profile" class="w-8 h-8 rounded-full mr-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                        </svg>
                         <span>{{ user.username }}</span>
                         <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" stroke-width="2"
                             viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -32,10 +34,10 @@
                     </div>
             </div>
         </div>
-        {% comment %} <div id="mobile-menu" class="md:hidden hidden mt-4">
+        <div id="mobile-menu" class="md:hidden hidden mt-4">
             <a href="{% url 'admin_dashboard' %}" class="block py-2 text-gray-600 hover:text-gray-800">Dashboard</a>
             <a href="#" class="block py-2 text-gray-600 hover:text-gray-800">Events</a>
             <a href="#" class="block py-2 text-gray-600 hover:text-gray-800">Catagoris</a>
             <a href="#" class="block py-2 text-gray-600 hover:text-gray-800">Participants</a>
-        </div> {% endcomment %}
+        </div> 
     </nav>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Event Management</title>
+    <title>Eventzilla</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
@@ -28,7 +28,6 @@
             dropdown.classList.toggle('hidden');
         }
 
-        // Hide dropdown on outside click
         document.addEventListener('click', function(event) {
             const button = document.getElementById('userDropdownBtn');
             const dropdown = document.getElementById('userDropdown');
@@ -36,6 +35,21 @@
                 dropdown.classList.add('hidden');
             }
         });
+
+        document.getElementById("menu-toggle").addEventListener("click", function () {
+            document.getElementById("mobile-menu").classList.toggle("hidden");
+        });
+
+        document.getElementById("user-menu-button").addEventListener("click", function () {
+            document.getElementById("user-menu").classList.toggle("hidden");
+        });
+
+        window.addEventListener("click", function (e) {
+            if (!document.getElementById("user-menu-button").contains(e.target)) {
+                document.getElementById("user-menu").classList.add("hidden");
+            }
+        });
+        
     </script>
 </body>
 </html>

@@ -20,7 +20,7 @@
                         <td class="px-4 py-4 whitespace-nowrap">{{ user.id }}</td>
                         <td class="px-4 py-4 whitespace-nowrap">{{ user.groups.first.name|default:"No group assigned" }}</td>
                         <td class="px-4 py-4 whitespace-nowrap">
-                            <a href="{% url 'assign_role' user.id %}" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">Change Role</a>
+                            <a href="{% url 'assign_role' user.id %}" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded">Change Role</a>
                         </td>
                     </tr>
                 {% endfor %}

@@ -8,7 +8,7 @@
     <div class="mb-8">
         <h1 class="text-4xl font-bold text-gray-800">Participant Dashboard</h1>
         <p class="text-gray-600 mt-2">Welcome back, {{ request.user.first_name|default:request.user.username }}!</p>
-        <span class="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">{{ user_role }}</span>
+        <span class="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-md mt-2 text-sm font-medium">{{ user_role }}</span>
     </div>
 
     <!-- Stats Grid -->
@@ -28,19 +28,6 @@
         <div class="bg-white p-6 rounded-lg shadow-lg">
             <h3 class="text-sm font-medium text-gray-500 mb-2">Past Events</h3>
             <p class="text-3xl font-bold text-gray-600">{{ stats.past_events }}</p>
-        </div>
-    </div>
-
-    <!-- Quick Actions -->
-    <div class="mb-8">
-        <h2 class="text-2xl font-bold text-gray-800 mb-4">Quick Actions</h2>
-        <div class="flex flex-wrap gap-4">
-            <a href="{% url 'event_list' %}" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-medium">
-                Browse Events
-            </a>
-            <a href="#" class="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-medium">
-                My RSVPs
-            </a>
         </div>
     </div>
 

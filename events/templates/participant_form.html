@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Create Participant{% endblock %}
+{% block title %}Participant{% endblock %}
 
 {% block content %}
 
@@ -19,21 +19,17 @@
 
 
                 <div class="w-full sm:w-1/2 p-6 bg-white rounded-lg shadow-md">
-                    <div class="mb-4">
-                        <h3 class="text-lg font-semibold mb-2"> Participant Name: </h3>
-                        <p>Fist name:  {{ participant_form.username}} </p>
+                    <div class="mb-4 ">
+                        <h3 class="text-lg font-semibold mb-2"> Name: </h3>
+                        <p class="border border-gray-500 w-1/2 rounded-md p-2"> {{ participant_form.username}} </p>
 
                     </div>
 
                     <div class="mb-4">
                         <h3 class="text-lg font-semibold mb-2"> Email: </h3>
-                        <p class="">{{ participant_form.email }} </p>
+                        <p class="border border-gray-500 w-1/2 rounded-md p-2">{{ participant_form.email }} </p>
                     </div>
 
-                    <div class="mb-4 flex justify-start">
-                        <h3 class="text-lg font-semibold mb-2">Event: </h3>
-                        <p class="ms-2">{{ participant_form.event }}</p>
-                    </div>
                     <div class="mb-4">
                         <button type="submit" class="bg-orange-500 text-white px-4 py-2 shadow-lg cursor-pointer rounded-md mt-4">
                             Save Participant

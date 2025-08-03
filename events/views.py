@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect , get_object_or_404
 from django.http import HttpResponse
 from events.models import Category,Event
 from events.forms import CategoryModelForm, EventModelForm, EventFilterForm
@@ -8,6 +8,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required,user_passes_test, permission_required
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth.models import User
+
 def is_organizer(user):
     return user.groups.filter(name='Organizer').exists()
 
@@ -60,7 +61,27 @@ def organizer_dashboard(request):
 
 @user_passes_test(is_participant, login_url='no_permission')
 def participant_dashboard(request):
-    return render(request, 'participant_dashboard.html')
+    upcoming_events = request.user.event.filter(date__gte=date.today()).select_related('category')
+    
+    stats = {
+        'total_rsvps': request.user.event.count(),
+        'confirmed_rsvps': request.user.event.count(),
+        'upcoming_events': upcoming_events.count(),
+        'past_events': request.user.event.filter(date__lt=date.today()).count()
+    }
+
+    context = {
+        'stats': stats,
+        'user_role': 'Participant',
+        'upcoming_events': [
+            {
+                'event': event,
+                'response': 'Confirmed'
+            } for event in upcoming_events
+        ]
+    }
+    return render(request, 'participant_dashboard.html', context)
+
 
 @login_required
 @permission_required('events.view_event', login_url='no_permission')
@@ -193,7 +214,7 @@ def participant_delete(request, id):
 
 
 @login_required
-@permission_required('events.view_catagory', login_url='no_permission')
+@permission_required('events.view_category', login_url='no_permission')
 def category_list(request):
     categories = Category.objects.all()
     
@@ -201,7 +222,7 @@ def category_list(request):
 
 
 @login_required
-@permission_required('events.add_catagory', login_url='no_permission')
+@permission_required('events.add_category', login_url='no_permission')
 def category_create(request):
     category_form = CategoryModelForm()
     
@@ -216,7 +237,7 @@ def category_create(request):
 
 
 @login_required
-@permission_required('events.change_catagory', login_url='no_permission')
+@permission_required('events.change_category', login_url='no_permission')
 def category_update(request,id):
     category = Category.objects.get(id = id)
     category_form = CategoryModelForm(instance = category)
@@ -232,7 +253,7 @@ def category_update(request,id):
 
 
 @login_required
-@permission_required('events.delete_catagory', login_url='no_permission')
+@permission_required('events.delete_category', login_url='no_permission')
 def category_delete(request,id):
     category = Category.objects.get(id=id)
     if request.method == "POST" :
@@ -242,3 +263,16 @@ def category_delete(request,id):
     
     return render(request, 'category_confirm_delete.html', {'category': category})
 
+
+def rsvp_event(request, id):
+    event = Event.objects.get(id = id)
+    
+    if request.user in event.participants.all():
+        messages.info(request, "You are already done RSVP to this event")
+        
+    else:
+        event.participants.add(request.user)
+        event.save()
+        messages.success(request,f"You have RSVP'd to {event.name} successfully")
+        
+    return redirect('event_list')

@@ -48,6 +48,22 @@
                 {% endfor %}
             </ol>
         </div>
+        
+        {% if request.user.is_authenticated and request.user.groups.first.name == 'Participant' %}
+            <form action="{% url 'rsvp_event' event.id %}" method="POST" class="mt-4">
+                {% csrf_token %}
+                {% if request.user in event.participants.all %}
+                    <button disabled class="bg-gray-400 text-white px-4 py-2 rounded cursor-not-allowed">
+                        Already RSVP'd
+                    </button>
+                {% else %}
+                    <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                        RSVP This Event
+                    </button>
+                {% endif %}
+            </form>
+        {% endif %}
+
 
         <div class="mt-6 flex gap-2">
             <a href="{% url 'event_update' event.id %}" class="text-green-600 px-2 py-1 hover:shadow-md rounded-md hover:bg-green-500 hover:text-white">Edit</a> |
