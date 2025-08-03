@@ -1,5 +1,4 @@
 asgiref==3.9.0
-decouple==0.0.7
 dj-database-url==3.0.1
 Django==5.2.4
 django-debug-toolbar==5.2.0
