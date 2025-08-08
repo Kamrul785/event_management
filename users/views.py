@@ -6,6 +6,11 @@ from django.contrib import messages
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.decorators import login_required,user_passes_test
 from events.views import is_organizer, is_participant
+from django.views.generic import TemplateView, UpdateView, CreateView, FormView, ListView
+from django.contrib.auth.views import LoginView,PasswordChangeView, PasswordResetView , PasswordResetConfirmView
+from django.urls import reverse_lazy
+from django.contrib.auth import get_user_model
+from django.contrib.auth.mixins import LoginRequiredMixin,PermissionRequiredMixin,UserPassesTestMixin
 # Create your views here.
 
 #test for user
@@ -134,6 +139,8 @@ def create_group(request):
 def group_list(request):
     groups = Group.objects.prefetch_related('permissions').all()
     return render(request, 'admin/group_list.html', {'groups':groups})
+
+
 
 
 def dashboard(request):

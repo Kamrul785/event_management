@@ -5,10 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Event Management</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .mobile-menu-enter {
+            animation: slideDown 0.3s ease-out;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .dropdown-enter {
+            animation: dropdownSlide 0.2s ease-out;
+        }
+
+        @keyframes dropdownSlide {
+            from {
+                opacity: 0;
+                transform: translateY(-5px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+    </style>
 </head>
 
-<body class="bg-gray-100 font-sans leading-normal tracking-normal">
-    
+<body class="bg-gray-100 font-sans leading-normal tracking-normal min-h-screen">
     
     {% if request.user.is_authenticated %}
         {% include 'logged_nav.html' %}
@@ -16,40 +46,107 @@
         {% include 'non_logged_nav.html' %}
     {% endif %}
         
-
-    <main class="container max-w-[1400px] mx-auto py-6">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {% block content %}
         {% endblock %}
     </main>
 
     <script>
-        function toggleDropdown() {
-            const dropdown = document.getElementById('userDropdown');
-            dropdown.classList.toggle('hidden');
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIcon = document.getElementById('menu-icon');
+        const closeIcon = document.getElementById('close-icon');
+        
+        if (mobileMenuBtn && mobileMenu) {
+            let isMenuOpen = false;
+
+            function toggleMobileMenu() {
+                isMenuOpen = !isMenuOpen;
+                
+                if (isMenuOpen) {
+                    mobileMenu.classList.remove('hidden');
+                    mobileMenu.classList.add('mobile-menu-enter');
+                    if (menuIcon) menuIcon.classList.add('hidden');
+                    if (closeIcon) closeIcon.classList.remove('hidden');
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    mobileMenu.classList.add('hidden');
+                    mobileMenu.classList.remove('mobile-menu-enter');
+                    if (menuIcon) menuIcon.classList.remove('hidden');
+                    if (closeIcon) closeIcon.classList.add('hidden');
+                    document.body.style.overflow = '';
+                }
+            }
+
+            mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+
+            const mobileMenuLinks = mobileMenu.querySelectorAll('a');
+            mobileMenuLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    if (isMenuOpen) {
+                        toggleMobileMenu();
+                    }
+                });
+            });
+            window.addEventListener('resize', () => {
+                if (window.innerWidth >= 1024 && isMenuOpen) {
+                    toggleMobileMenu();
+                }
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && isMenuOpen) {
+                    toggleMobileMenu();
+                }
+            });
         }
 
-        document.addEventListener('click', function(event) {
-            const button = document.getElementById('userDropdownBtn');
-            const dropdown = document.getElementById('userDropdown');
-            if (!button.contains(event.target) && !dropdown.contains(event.target)) {
-                dropdown.classList.add('hidden');
+        // User dropdown functionality (for logged navigation)
+        const userDropdownBtn = document.getElementById('user-dropdown-btn');
+        const userDropdown = document.getElementById('user-dropdown');
+        const dropdownArrow = document.getElementById('dropdown-arrow');
+
+        let isDropdownOpen = false;
+
+        // User dropdown toggle
+        function toggleUserDropdown() {
+            isDropdownOpen = !isDropdownOpen;
+            
+            if (isDropdownOpen) {
+                userDropdown.classList.remove('hidden');
+                userDropdown.classList.add('dropdown-enter');
+                dropdownArrow.style.transform = 'rotate(180deg)';
+            } else {
+                userDropdown.classList.add('hidden');
+                userDropdown.classList.remove('dropdown-enter');
+                dropdownArrow.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        if (userDropdownBtn) {
+            userDropdownBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleUserDropdown();
+            });
+        }
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', (e) => {
+            // Close user dropdown if clicking outside
+            if (userDropdown && !userDropdown.contains(e.target) && userDropdownBtn && !userDropdownBtn.contains(e.target)) {
+                if (isDropdownOpen) {
+                    toggleUserDropdown();
+                }
             }
         });
 
-        document.getElementById("menu-toggle").addEventListener("click", function () {
-            document.getElementById("mobile-menu").classList.toggle("hidden");
-        });
-
-        document.getElementById("user-menu-button").addEventListener("click", function () {
-            document.getElementById("user-menu").classList.toggle("hidden");
-        });
-
-        window.addEventListener("click", function (e) {
-            if (!document.getElementById("user-menu-button").contains(e.target)) {
-                document.getElementById("user-menu").classList.add("hidden");
+        // Close dropdown on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && isDropdownOpen) {
+                toggleUserDropdown();
             }
         });
-        
+
     </script>
 </body>
 </html>

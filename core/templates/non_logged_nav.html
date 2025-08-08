@@ -1,51 +1,86 @@
-    <nav class="bg-orange-500 p-4 shadow-md">
-        <div class="flex justify-between items-center">
+<nav class="bg-gradient-to-r from-orange-500 to-orange-600 shadow-lg sticky top-0 z-50">
+    <div class="max-w-[1450px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
             
-            <a href="{% url 'home' %}" class="text-white text-2xl font-semibold">Eventzilla</a>
-
-            <div class="flex space-x-6">
-                <a href="{% url 'home' %}" class="text-white font-semibold hover:bg-orange-600 px-4 py-2 rounded">Home</a>
-                <a href="{% url 'event_list' %}" class="text-white font-semibold hover:bg-orange-600 px-4 py-2 rounded">Events</a>
-                <a href="{% url 'category_list' %}" class="text-white font-semibold hover:bg-orange-600 px-4 py-2 rounded">Categories</a>
-                <a href="{% url 'participant_list' %}" class="text-white font-semibold hover:bg-orange-600 px-4 py-2 rounded">Participants</a>
-                <a href="{% url 'dashboard' %}" class="text-white font-semibold hover:bg-orange-600 px-4 py-2 rounded">Dashboard</a>
+            <div class="flex-shrink-0">
+                <a href="{% url 'home' %}" class="text-white text-xl sm:text-2xl font-bold tracking-tight hover:text-orange-100 transition-colors">
+                   Eventzilla
+                </a>
+            </div>
+            <div class="hidden lg:flex items-center space-x-1">
+                <a href="{% url 'home' %}" class="text-white hover:bg-white hover:bg-opacity-20 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200">
+                    Home
+                </a>
+                <a href="{% url 'event_list' %}" class="text-white hover:bg-white hover:bg-opacity-20 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200">
+                    Events
+                </a>
+                <a href="{% url 'category_list' %}" class="text-white hover:bg-white hover:bg-opacity-20 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200">
+                    Categories
+                </a>
+                <a href="{% url 'participant_list' %}" class="text-white hover:bg-white hover:bg-opacity-20 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200">
+                    Participants
+                </a>
+                <a href="{% url 'dashboard' %}" class="text-white hover:bg-white hover:bg-opacity-20 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200">
+                    Dashboard
+                </a>
             </div>
 
-            <div class="relative ml-6">
-                <a href="{% url 'sign_in' %}" class="text-white font-semibold hover:bg-orange-600 px-4 py-2 rounded">Login</a>
-                <a href="{% url 'sign_up' %}" class="text-white font-semibold hover:bg-orange-600 px-4 py-2 rounded">Register</a>
+            <div class="hidden lg:flex items-center space-x-3">
+                <a href="{% url 'sign_in' %}" class="text-white border border-white border-opacity-50 hover:bg-white hover:text-orange-600 px-4 py-2 rounded-md text-sm font-medium transition-all duration-200">
+                    Login
+                </a>
+                <a href="{% url 'sign_up' %}" class="bg-white text-orange-600 hover:bg-orange-50 px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 shadow-sm">
+                    Register
+                </a>
             </div>
 
-            <div class="md:hidden ml-4">
-                <button id="menu-toggle" class="text-gray-600 hover:text-gray-800 focus:outline-none">
-                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+            <div class="lg:hidden">
+                <button id="mobile-menu-btn" class="text-white hover:text-orange-100 hover:bg-white hover:bg-opacity-20 p-2 rounded-md transition-all duration-200" aria-label="Toggle menu">
+                    <svg id="menu-icon" class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                    <svg id="close-icon" class="h-6 w-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                     </svg>
                 </button>
             </div>
         </div>
+    </div>
 
-        
-        <div id="mobile-menu" class="md:hidden hidden mt-4">
-            <a href="{% url 'dashboard' %}" class="block py-2 text-gray-600 hover:text-gray-800">Dashboard</a>
-            <a href="#" class="block py-2 text-gray-600 hover:text-gray-800">Events</a>
-            <a href="#" class="block py-2 text-gray-600 hover:text-gray-800">Catagoris</a>
-            <a href="#" class="block py-2 text-gray-600 hover:text-gray-800">Participants</a>
-        </div> 
-    </nav>
-
-    <script>
-        document.getElementById("menu-toggle").addEventListener("click", function () {
-            document.getElementById("mobile-menu").classList.toggle("hidden");
-        });
-
-        document.getElementById("user-menu-button").addEventListener("click", function () {
-            document.getElementById("user-menu").classList.toggle("hidden");
-        });
-
-        window.addEventListener("click", function (e) {
-            if (!document.getElementById("user-menu-button").contains(e.target)) {
-                document.getElementById("user-menu").classList.add("hidden");
-            }
-        });
-    </script>
+    <!-- Mobile/Tablet Menu -->
+    <div id="mobile-menu" class="lg:hidden hidden">
+        <div class="px-4 py-4 space-y-2 bg-orange-600 border-t border-orange-400">
+            <!-- Main Navigation -->
+            <div class="space-y-1">
+                <a href="{% url 'home' %}" class="text-white hover:bg-orange-700 block px-3 py-3 rounded-md text-base font-medium transition-colors">
+                    🏠 Home
+                </a>
+                <a href="{% url 'event_list' %}" class="text-white hover:bg-orange-700 block px-3 py-3 rounded-md text-base font-medium transition-colors">
+                    🎪 Events
+                </a>
+                <a href="{% url 'category_list' %}" class="text-white hover:bg-orange-700 block px-3 py-3 rounded-md text-base font-medium transition-colors">
+                    📂 Categories
+                </a>
+                <a href="{% url 'participant_list' %}" class="text-white hover:bg-orange-700 block px-3 py-3 rounded-md text-base font-medium transition-colors">
+                    👥 Participants
+                </a>
+                <a href="{% url 'dashboard' %}" class="text-white hover:bg-orange-700 block px-3 py-3 rounded-md text-base font-medium transition-colors">
+                    📊 Dashboard
+                </a>
+            </div>
+            
+            <!-- Divider -->
+            <div class="border-t border-orange-400 pt-4">
+                <!-- Auth Buttons -->
+                <div class="space-y-2">
+                    <a href="{% url 'sign_in' %}" class="text-white border border-white border-opacity-50 hover:bg-white hover:text-orange-600 block px-3 py-3 rounded-md text-base font-medium text-center transition-all">
+                        Login
+                    </a>
+                    <a href="{% url 'sign_up' %}" class="bg-white text-orange-600 hover:bg-orange-50 block px-3 py-3 rounded-md text-base font-medium text-center transition-all shadow-sm">
+                        Register
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
