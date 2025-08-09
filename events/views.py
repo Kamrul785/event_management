@@ -151,8 +151,6 @@ class EventList(LoginRequiredMixin, PermissionRequiredMixin, ListView):
         return context
     
     
-    
-
 
 @login_required
 @permission_required('events.view_event', login_url='no_permission')
@@ -211,7 +209,7 @@ def event_update(request,id):
         if event_form.is_valid():
             event_form.save()
             messages.success(request, "Event Updated Successfully")
-        
+            return redirect('event_list')
     return render(request, 'event_form.html', {'event_form' : event_form , 'event' : event})
 
 

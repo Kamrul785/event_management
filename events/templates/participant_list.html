@@ -3,6 +3,7 @@
 {% block title %}Participant List{% endblock %}
 
 {% block content %}
+<div class='w-[1400px] mx-auto px-4 mt-8'>
     <h1 class="text-3xl font-semibold text-gray-800 mb-6">Participant List</h1>
     {% comment %} <a href="{% url 'participant_create' %}" class="bg-orange-500 text-white px-4 py-2 shadow-xl rounded mb-4 inline-block">Create Participant</a> {% endcomment %}
     <div class="overflow-hidden shadow rounded-lg bg-white">
@@ -34,4 +35,5 @@
             </tbody>
         </table>
     </div>
+</div>
 {% endblock %}

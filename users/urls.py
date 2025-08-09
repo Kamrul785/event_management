@@ -21,7 +21,6 @@ urlpatterns = [
     path('profile/edit/', EditProfileView.as_view(), name='edit_profile'),
     
     
-    
     path('dashboard/', dashboard, name='dashboard'),
 ]
 
