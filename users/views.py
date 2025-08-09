@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, HttpResponse
-from django.contrib.auth.models import User, Group, Permission
-from users.forms import CustomRegistrationForm, LoginForm ,AssignRoleForm, CreateGroupForm
+from django.contrib.auth.models import  Group, Permission
+from users.forms import CustomRegistrationForm, LoginForm ,AssignRoleForm, CreateGroupForm, CustomPasswordChangeForm, CustomPasswordRestForm, CustomPasswordRestConfirmForm, EditProfileForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.contrib.auth.tokens import default_token_generator
@@ -11,14 +11,17 @@ from django.contrib.auth.views import LoginView,PasswordChangeView, PasswordRese
 from django.urls import reverse_lazy
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin,PermissionRequiredMixin,UserPassesTestMixin
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
+
 # Create your views here.
 
 #test for user
 
 def is_admin(user):
     return user.groups.filter(name='Admin').exists()
-
-
 
 
 def profile_view(request):
@@ -135,11 +138,104 @@ def create_group(request):
     return render(request, 'admin/create_group.html', {'form':form})
 
 
+class CreateGroup(LoginRequiredMixin,UserPassesTestMixin,CreateView):
+    model = Group
+    template_name = 'admin/create_group.html'
+    form_class = CreateGroupForm
+    success_url = reverse_lazy('create_group')
+    login_url = 'no_permission'
+    
+    def test_func(self):
+        return is_admin(self.request.user)
+    
+    def form_valid(self, form):
+        context =  super().form_valid(form)
+        messages.success(self.request, f'A group {self.object.name} created successfully')
+
+        return context
+    
+
 @login_required
 def group_list(request):
     groups = Group.objects.prefetch_related('permissions').all()
     return render(request, 'admin/group_list.html', {'groups':groups})
 
+class GroupList(LoginRequiredMixin,UserPassesTestMixin,ListView):
+    model = Group
+    context_object_name = 'groups'
+    template_name = 'admin/group_list.html'
+    login_url = 'no_permission'
+    
+    def test_func(self):
+        return is_admin(self.request.user)
+    
+    def get_queryset(self):
+        queryset = Group.objects.prefetch_related('permissions').all()
+        return queryset
+
+
+class ProfileView(TemplateView):
+    template_name = 'accounts/profile.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        
+        context['username'] = user.username
+        context['email'] = user.email
+        context['name'] = user.get_full_name()
+        context['profile_image'] = user.profile_image
+        context['phone_number'] = user.phone_number
+        context['member_since'] = user.date_joined
+        context['last_login'] = user.last_login
+        
+        return context 
+
+class ChangePassword(PasswordChangeView):
+    template_name = 'accounts/change_password.html'
+    form_class = CustomPasswordChangeForm
+
+
+class CustomPasswordRestView(PasswordResetView):
+    form_class = CustomPasswordRestForm
+    template_name = 'registration/reset_password.html'
+    success_url = reverse_lazy('sign_in')
+    html_email_template_name = 'registration/reset_email.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['protocol'] = 'https' if self.request.is_secure() else 'http'
+        context['domain'] = self.request.get_host()
+        print(context)
+        return context
+    
+    def form_valid(self, form):
+        messages.success(self.request, 'A password rest email sent.Please check your email')
+        return super().form_valid(form)
+    
+class CustomPasswordRestConfirmView(PasswordResetConfirmView):
+    form_class = CustomPasswordRestConfirmForm
+    template_name = 'registration/reset_password.html'
+    success_url = reverse_lazy('sign_in')
+    
+    def form_valid(self, form):
+        messages.success(self.request, 'Password Reset Successfully')
+        return super().form_valid(form)
+    
+
+
+class EditProfileView(UpdateView):
+    Model = User
+    form_class = EditProfileForm
+    template_name = 'accounts/update_profile.html'
+    context_object_name = 'form'
+    
+    def get_object(self):
+        return self.request.user
+    
+    def form_valid(self,form):
+        form.save()
+        return redirect('profile_view')
 
 
 

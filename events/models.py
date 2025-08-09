@@ -1,6 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
-
+from django.conf import settings
 class Category(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
@@ -27,7 +26,7 @@ class Event(models.Model):
         default='event_asset/default_img.png'
     )
     participants = models.ManyToManyField(
-        User,
+        settings.AUTH_USER_MODEL,
         related_name='event',
         blank=True,
         null=True

@@ -17,6 +17,8 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 CSRF_TRUSTED_ORIGINS= ['https://*.onrender.com','http://127.0.0.1:8000']
 
+TIME_ZONE = 'Asia/Dhaka'
+AUTH_USER_MODEL = 'users.CustomUser'
 
 # Application definition
 
@@ -98,7 +100,7 @@ WSGI_APPLICATION = 'event_management.wsgi.application'
 DATABASES = {
     'default': dj_database_url.config(
         # Replace this value with your local database's connection string.
-        default='postgresql://event_management_db_oal5_user:3SAMfy5Vdvn1ucLSJulWQOatGyAiJTVl@dpg-d2b1gpadbo4c73acuiu0-a.oregon-postgres.render.com/event_management_db_oal5',
+        default='postgresql://event_management_db_3kbk_user:iawICht3QKDwy9gQb2BNsDX5cYFZOCaL@dpg-d2bg8eidbo4c73aqbkc0-a.oregon-postgres.render.com/event_management_db_3kbk',
         conn_max_age=600
     )
 }

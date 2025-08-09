@@ -2,12 +2,16 @@ from django.urls import path
 from events.views import event_list, event_detail, event_create, event_update, event_delete,rsvp_event
 from events.views import participant_create,participant_delete,participant_list,participant_update, participant_dashboard
 from events.views import category_list,category_create,category_update,category_delete, organizer_dashboard
+from events.views import EventDetail, EventList,CreateEvent
 
 urlpatterns = [
     # event
-    path('event_list/',event_list, name = "event_list"),
-    path('event_detail/<int:id>/',event_detail, name = "event_detail"),
-    path('event_create/',event_create, name = "event_create"),
+    # path('event_list/',event_list, name = "event_list"),
+    path('event_list/',EventList.as_view(), name = "event_list"),
+    # path('event_detail/<int:id>/',event_detail, name = "event_detail"),
+    path('event_detail/<int:id>/',EventDetail.as_view(), name = "event_detail"),
+    # path('event_create/',event_create, name = "event_create"),
+    path('event_create/',CreateEvent.as_view(), name = "event_create"),
     path('event_update/<int:id>',event_update, name = "event_update"),
     path('event_delete/<int:id>',event_delete, name = "event_delete"),
     

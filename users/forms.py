@@ -1,8 +1,13 @@
 from django import forms
 import re
-from django.contrib.auth.models import User, Group, Permission
+from django.contrib.auth.models import Group, Permission
 from events.forms import StyledFormMixin
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm, PasswordResetForm, SetPasswordForm
+from users.models import CustomUser
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 # class StyledFormMixin:
 #     """Mixin to apply consistent styling to form fields"""
@@ -35,7 +40,7 @@ from django.contrib.auth.forms import AuthenticationForm
 #                 })
 
 
-class CustomRegistrationForm(StyledFormMixin,forms.ModelForm):
+class CustomRegistrationForm(StyledFormMixin, forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
     confirm_password = forms.CharField(widget=forms.PasswordInput)
     
@@ -105,3 +110,18 @@ class CreateGroupForm(StyledFormMixin, forms.ModelForm):
         model = Group
         fields = ['name', 'permissions']
         
+
+class CustomPasswordChangeForm(StyledFormMixin,PasswordChangeForm):
+    pass
+
+class CustomPasswordRestForm(StyledFormMixin, PasswordResetForm):
+    pass
+
+class CustomPasswordRestConfirmForm(StyledFormMixin, SetPasswordForm):
+    pass
+
+
+class EditProfileForm(StyledFormMixin, forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['email', 'first_name', 'last_name', 'profile_image', 'phone_number']
