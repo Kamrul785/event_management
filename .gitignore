@@ -19,3 +19,6 @@ env/
 
 # VSCode
 .vscode/
+
+# Design Backups
+design_templates_backup/

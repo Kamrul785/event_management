@@ -86,19 +86,19 @@
             <!-- Main Navigation -->
             <div class="space-y-1">
                 <a href="{% url 'home' %}" class="text-white hover:bg-orange-700 block px-3 py-3 rounded-md text-base font-medium transition-colors">
-                    🏠 Home
+                     Home
                 </a>
                 <a href="{% url 'event_list' %}" class="text-white hover:bg-orange-700 block px-3 py-3 rounded-md text-base font-medium transition-colors">
-                    🎪 Events
+                     Events
                 </a>
                 <a href="{% url 'category_list' %}" class="text-white hover:bg-orange-700 block px-3 py-3 rounded-md text-base font-medium transition-colors">
-                    📂 Categories
+                     Categories
                 </a>
                 <a href="{% url 'participant_list' %}" class="text-white hover:bg-orange-700 block px-3 py-3 rounded-md text-base font-medium transition-colors">
-                    👥 Participants
+                     Participants
                 </a>
                 <a href="{% url 'dashboard' %}" class="text-white hover:bg-orange-700 block px-3 py-3 rounded-md text-base font-medium transition-colors">
-                    📊 Dashboard
+                     Dashboard
                 </a>
             </div>
             
@@ -113,12 +113,12 @@
                         <span class="font-medium">{{ user.username }}</span>
                     </div>
                     <a href="{% url 'profile_view' %}" class="text-white hover:bg-orange-700 block px-3 py-3 rounded-md text-base font-medium transition-colors">
-                        👤 My Profile
+                         My Profile
                     </a>
                     <form method="post" action="{% url 'sign_out' %}" class="block">
                         {% csrf_token %}
                         <button type="submit" class="text-white hover:bg-orange-700 block w-full text-left px-3 py-3 rounded-md text-base font-medium transition-colors">
-                            🚪 Logout
+                             Logout
                         </button>
                     </form>
                 </div>

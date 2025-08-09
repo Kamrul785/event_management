@@ -42,7 +42,7 @@
             <h3 class="text-xl font-semibold text-gray-700">Participants:</h3>
             <ol class="list-decimal pl-8">
                 {% for participant in event.participants.all %}
-                    <li class="text-gray-600">Name: {{ participant.name }} | Emaail: {{ participant.email }}</li>
+                    <li class="text-gray-600">Name: {{ participant.first_name }} {{participant.last_name}} | Email: {{ participant.email }}</li>
                 {% empty %}
                     <li class="text-gray-600">No participants yet</li>
                 {% endfor %}
