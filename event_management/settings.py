@@ -164,7 +164,7 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'kamrulkhan526785@gmail.com' 
 EMAIL_HOST_PASSWORD = 'dpsq apqq jzeo visr'
 
-FRONTEND_URL = 'http://127.0.0.1:8000/'
+FRONTEND_URL = 'https://event-management-cj2i.onrender.com/'
 
 
 LOGIN_URL = 'sign_in'
