@@ -1,43 +1,207 @@
 {% extends 'base.html' %}
-
-{% block title %}Participant{% endblock %}
+{% load widget_tweaks %}
+{% block title %}
+    {% if participant_form.instance.pk %}Update Participant{% else %}Create Participant{% endif %}
+{% endblock %}
 
 {% block content %}
+<div class='w-full max-w-[1400px] mx-auto px-4 py-8'>
+    <!-- Page Header -->
+    <h1 class="text-3xl font-semibold text-gray-800 mb-6 text-center">
+        {% if participant_form.instance.pk %}Update Participant{% else %}Create New Participant{% endif %}
+    </h1>
 
-        <div>
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="px-2 py-1 {% if message.tags == 'success' %} bg-green-500{% endif%}"> {{message}} </div>
-                {% endfor %}
-                
-            {% endif %}
+    <!-- Messages Section -->
+    {% if messages %}
+        <div class="mb-6">
+            {% for message in messages %}
+                <div class="px-4 py-3 rounded-lg mb-2 {% if message.tags == 'success' %}bg-green-500 text-white{% elif message.tags == 'error' %}bg-red-500 text-white{% else %}bg-blue-500 text-white{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
         </div>
-        
-        <form method="POST">
-            {% csrf_token %}
-            <div class="flex items-center justify-center">
+    {% endif %}
 
+    <!-- Form Container -->
+    <form method="POST">
+        {% csrf_token %}
+        <div class="flex items-center justify-center">
+            <div class="w-full sm:w-1/2 p-6 bg-white rounded-lg shadow-md">
+                
+                <!-- Username Field -->
+                <div class="mb-4">
+                    <h3 class="text-lg font-semibold mb-2">Username</h3>
+                    {% if participant_form.username %}
+                        <div class="relative">
+                            {{ participant_form.username|add_class:"w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-orange-400 transition text-gray-800 placeholder-gray-400" }}
+                        </div>
+                    {% endif %}
+                    {% if participant_form.username.errors %}
+                        <div class="text-red-600 text-sm mt-1">
+                            {% for error in participant_form.username.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
 
-                <div class="w-full sm:w-1/2 p-6 bg-white rounded-lg shadow-md">
-                    <div class="mb-4 ">
-                        <h3 class="text-lg font-semibold mb-2"> Name: </h3>
-                        <p class="border border-gray-500 w-1/2 rounded-md p-2"> {{ participant_form.username}} </p>
+                <!-- First Name Field (if available) -->
+                {% if participant_form.first_name %}
+                <div class="mb-4">
+                    <h3 class="text-lg font-semibold mb-2">First Name</h3>
+                    {{ participant_form.first_name|add_class:"w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-orange-400 transition text-gray-800 placeholder-gray-400" }}
+                    {% if participant_form.first_name.errors %}
+                        <div class="text-red-600 text-sm mt-1">
+                            {% for error in participant_form.first_name.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                {% endif %}
 
+                <!-- Last Name Field (if available) -->
+                {% if participant_form.last_name %}
+                <div class="mb-4">
+                    <h3 class="text-lg font-semibold mb-2">Last Name</h3>
+                    {{ participant_form.last_name|add_class:"w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-orange-400 transition text-gray-800 placeholder-gray-400" }}
+                    {% if participant_form.last_name.errors %}
+                        <div class="text-red-600 text-sm mt-1">
+                            {% for error in participant_form.last_name.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                <!-- Email Field -->
+                {% if participant_form.email %}
+                <div class="mb-4">
+                    <h3 class="text-lg font-semibold mb-2">Email Address</h3>
+                    {{ participant_form.email|add_class:"w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-orange-400 transition text-gray-800 placeholder-gray-400" }}
+                    {% if participant_form.email.errors %}
+                        <div class="text-red-600 text-sm mt-1">
+                            {% for error in participant_form.email.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                <!-- Password Fields (only for UserCreationForm) -->
+                {% if participant_form.password1 %}
+                <div class="mb-4">
+                    <h3 class="text-lg font-semibold mb-2">Password</h3>
+                    <div class="relative">
+                        {{ participant_form.password1|add_class:"w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-orange-400 transition text-gray-800 placeholder-gray-400" }}
                     </div>
+                    {% if participant_form.password1.errors %}
+                        <div class="text-red-600 text-sm mt-1">
+                            {% for error in participant_form.password1.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    {% if participant_form.password1.help_text %}
+                        <div class="text-gray-600 text-sm mt-1">
+                            <ul class="list-disc list-inside space-y-1">
+                                <li>Your password can't be too similar to your other personal information.</li>
+                                <li>Your password must contain at least 8 characters.</li>
+                                <li>Your password can't be a commonly used password.</li>
+                                <li>Your password can't be entirely numeric.</li>
+                            </ul>
+                        </div>
+                    {% endif %}
+                </div>
 
-                    <div class="mb-4">
-                        <h3 class="text-lg font-semibold mb-2"> Email: </h3>
-                        <p class="border border-gray-500 w-1/2 rounded-md p-2">{{ participant_form.email }} </p>
+                <div class="mb-4">
+                    <h3 class="text-lg font-semibold mb-2">Confirm Password</h3>
+                    <div class="relative">
+                        {{ participant_form.password2|add_class:"w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-orange-400 transition text-gray-800 placeholder-gray-400" }}
                     </div>
+                    {% if participant_form.password2.errors %}
+                        <div class="text-red-600 text-sm mt-1">
+                            {% for error in participant_form.password2.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                {% endif %}
 
-                    <div class="mb-4">
-                        <button type="submit" class="bg-orange-500 text-white px-4 py-2 shadow-lg cursor-pointer rounded-md mt-4">
+                <!-- Non-field errors -->
+                {% if participant_form.non_field_errors %}
+                    <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                        {% for error in participant_form.non_field_errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <!-- Submit Button -->
+                <div class="mb-4 flex flex-col sm:flex-row gap-3">
+                    <button type="submit" class="bg-orange-500 text-white px-6 py-2 rounded-lg shadow-sm hover:shadow-lg cursor-pointer transition duration-300 flex-1 sm:flex-none">
+                        {% if participant_form.instance.pk %}
+                            Update Participant
+                        {% else %}
                             Save Participant
-                        </button>
-                    </div>
+                        {% endif %}
+                    </button>
+                    <a href="{% url 'participant_list' %}" class="bg-gray-500 text-white px-6 py-2 rounded-lg shadow-sm hover:shadow-lg cursor-pointer transition duration-300 text-center">
+                        Cancel
+                    </a>
                 </div>
             </div>
-            
-        </form>
+        </div>
+    </form>
 
+    <!-- Help Section -->
+    <div class="max-w-md mx-auto mt-8 p-4 bg-blue-50 rounded-lg border border-blue-200">
+        <h4 class="text-lg font-medium text-blue-800 mb-2">Need Help?</h4>
+        <p class="text-blue-700 text-sm">
+            {% if participant_form.instance.pk %}
+                Update the participant's information and click "Update Participant" to save changes.
+            {% else %}
+                Fill in the participant's details and create a secure password. They'll be able to log in and RSVP to events.
+            {% endif %}
+        </p>
+    </div>
+</div>
+
+<style>
+/* Mobile-first responsive design */
+@media (max-width: 640px) {
+    .w-full.sm\\:w-1\\/2 {
+        width: 100%;
+        margin: 0 16px;
+    }
+    
+    .flex-col.sm\\:flex-row {
+        flex-direction: column;
+    }
+    
+    .flex-1.sm\\:flex-none {
+        width: 100%;
+    }
+}
+
+/* Enhanced input focus states */
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #f97316 !important;
+    box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1) !important;
+}
+
+/* Button hover effects */
+button:hover, .cursor-pointer:hover {
+    transform: translateY(-1px);
+}
+
+/* Smooth transitions */
+button, .cursor-pointer, input, select, textarea {
+    transition: all 0.2s ease-in-out;
+}
+</style>
 {% endblock %}

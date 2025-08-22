@@ -1,17 +1,115 @@
 {% extends 'admin/dashboard.html' %}
 {% block content %}
-    <div class="max-w-md mx-auto mt-6 p-6 bg-white shadow-md rounded-lg">
-        <h2 class="text-2xl font-bold mb-4">Assign Role for {{ user.username }} (ID: {{ user.id }})</h2>
-        {% if messages %}
-            {% for message in messages %}
-                <p class="mb-2 {% if message.tags == 'error' %}text-red-600{% else %}text-green-600{% endif %}">{{ message }}</p>
-            {% endfor %}
-        {% endif %}
-        <form method="POST" class="space-y-4">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 focus:outline-none">Assign Role</button>
-        </form>
-        <a href="{% url 'admin_dashboard' %}" class="mt-4 inline-block px-4 py-2 border-2 border-gray-300 rounded-lg hover:bg-gray-100">Back to Dashboard</a>
+    <div class="container mx-auto px-6 py-8">
+        <div class="max-w-2xl mx-auto">
+            
+            <!-- Header Section -->
+            <div class="mb-8">
+                <div class="flex items-center space-x-3 mb-4">
+                    <a href="{% url 'admin_dashboard' %}" class="inline-flex items-center text-orange-500 hover:text-orange-600 transition-colors">
+                        <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                        </svg>
+                        Back to Dashboard
+                    </a>
+                </div>
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">Assign User Role</h1>
+                <p class="text-gray-600">Change the role and permissions for this user</p>
+            </div>
+
+            <!-- User Info Card -->
+            <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-6 mb-6">
+                <div class="flex items-center space-x-4">
+                    <div class="h-16 w-16 rounded-full bg-gradient-to-r from-orange-400 to-orange-600 flex items-center justify-center">
+                        <span class="text-white font-bold text-xl">
+                            {{ user.first_name|first|default:user.username|first|upper }}
+                        </span>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-gray-800">
+                            {{ user.get_full_name|default:user.username }}
+                        </h2>
+                        <p class="text-gray-600">{{ user.email }}</p>
+                        <div class="flex items-center space-x-2 mt-2">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                User ID: {{ user.id }}
+                            </span>
+                            {% if user.groups.first %}
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                                    {% if user.groups.first.name == 'Admin' %}bg-red-100 text-red-800
+                                    {% elif user.groups.first.name == 'Manager' %}bg-blue-100 text-blue-800
+                                    {% elif user.groups.first.name == 'Staff' %}bg-green-100 text-green-800
+                                    {% else %}bg-gray-100 text-gray-800{% endif %}">
+                                    Current: {{ user.groups.first.name }}
+                                </span>
+                            {% else %}
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                    No Role Assigned
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Card -->
+            <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
+                
+                <!-- Messages -->
+                {% if messages %}
+                    <div class="mb-6 space-y-3">
+                        {% for message in messages %}
+                            <div class="p-4 rounded-lg border-l-4 {% if message.tags == 'error' %}bg-red-50 border-red-400 text-red-700{% else %}bg-green-50 border-green-400 text-green-700{% endif %}">
+                                <div class="flex items-center">
+                                    {% if message.tags == 'error' %}
+                                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.704-.833-2.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                                        </svg>
+                                    {% else %}
+                                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                    {% endif %}
+                                    <span class="font-medium">{{ message }}</span>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                    <!-- Role Assignment Form -->
+                <form method="POST" class="space-y-4">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 focus:outline-none">Assign Role</button>
+                </form>
+
+                <!-- Warning Notice -->
+                <div class="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                    <div class="flex">
+                        <svg class="w-5 h-5 text-yellow-400 mr-3 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.704-.833-2.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                        </svg>
+                        <div>
+                            <h3 class="text-sm font-medium text-yellow-800 mb-1">Important Notice</h3>
+                            <p class="text-sm text-yellow-700">
+                                Changing a user's role will immediately update their permissions and access levels. 
+                                Make sure you understand the implications before proceeding.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <style>
+        /* Custom radio button styling */
+        input[type="radio"]:checked + label .w-2 {
+            opacity: 1;
+        }
+        input[type="radio"] + label:hover .w-5 {
+            border-color: #f97316;
+        }
+    </style>
 {% endblock content %}
