@@ -12,6 +12,7 @@ from django.urls import reverse_lazy
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin,PermissionRequiredMixin,UserPassesTestMixin
 from django.contrib.auth import get_user_model
+from events.models import Event, Category
 
 User = get_user_model()
 
@@ -83,7 +84,15 @@ def activate_user(request, user_id, token):
 @user_passes_test(is_admin, login_url='no_permission')
 def admin_dashboard(request):
     users = User.objects.all()
-    return render(request, 'admin/dashboard.html', {'users':users})
+    active_events = Event.objects.filter(is_active=True).count() if hasattr(Event, 'is_active') else Event.objects.count()
+    participants = User.objects.filter(groups__name='Participant').count()
+    categories = Category.objects.count()
+    return render(request, 'admin/dashboard.html', {
+        'users': users,
+        'active_events': active_events,
+        'participants': participants,
+        'categories': categories,
+    })
 
 
 @user_passes_test(is_admin, login_url='no_permission')
