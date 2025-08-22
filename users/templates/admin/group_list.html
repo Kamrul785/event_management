@@ -1,34 +1,221 @@
 {% extends "admin/dashboard.html" %}
 {% block content %}
-    <div class="w-2/3 mx-auto my-8">
-        <h2 class="text-2xl font-bold mb-4">Groups and Permissions</h2>
-        <div class="overflow-x-auto">
-            <table class="table-auto w-full border-collapse border border-gray-300">
-            <thead>
-                <tr class="bg-gray-100">
-                <th class="border border-gray-300 px-4 py-2">Group Name</th>
-                <th class="border border-gray-300 px-4 py-2">Permissions</th>
-                </tr>
-            </thead>
-            <tbody>
+    <div class="container mx-auto px-6 py-8">
+        
+        <!-- Header Section -->
+        <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8">
+            <div>
+                <div class="flex items-center space-x-3 mb-4">
+                    <a href="{% url 'admin_dashboard' %}" class="inline-flex items-center text-orange-500 hover:text-orange-600 transition-colors">
+                        <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                        </svg>
+                        Back to Dashboard
+                    </a>
+                </div>
+                <div class="flex items-center space-x-3 mb-2">
+                    <div class="bg-orange-100 p-2 rounded-lg">
+                        <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                    </div>
+                    <h1 class="text-4xl font-bold text-gray-800">Groups & Permissions</h1>
+                </div>
+                <p class="text-gray-600">Manage user groups and their permission levels</p>
+            </div>
+            
+            <div class="flex flex-col sm:flex-row gap-3 mt-4 lg:mt-0">
+                <div class="bg-orange-100 text-orange-600 px-4 py-2 rounded-lg text-sm font-medium">
+                    {{ groups.count|default:"0" }} Total Groups
+                </div>
+                <a href="{% url 'create_group' %}" 
+                   class="inline-flex items-center px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg transition-colors shadow-md">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    Create New Group
+                </a>
+            </div>
+        </div>
+
+        <!-- Search and Filter Section -->
+        <div class="bg-white rounded-lg shadow-md border border-gray-200 p-4 mb-6">
+            <div class="flex flex-col sm:flex-row gap-4">
+                <div class="flex-1">
+                    <div class="relative">
+                        <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                        <input type="text" placeholder="Search groups..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                    </div>
+                </div>
+                <select class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                    <option>All Groups</option>
+                    <option>With Permissions</option>
+                    <option>No Permissions</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Groups Grid -->
+        <div class="space-y-6">
             {% for group in groups %}
-                <tr class="odd:bg-white even:bg-gray-50">
-                    <td class="border border-gray-300 px-4 py-2 font-medium">
-                        {{group.name}}
-                    </td>
-                    <td class="border border-gray-300 px-4 py-2">
-                        <ul class="list-disc list-inside">
-                            {% for permission in group.permissions.all %}
-                                <li>{{permission.name}}| {{permission.codename}} </li>
-                            {% empty %}
-                                <span class="text-gray-500 italic">No permissions assigned</span>
-                            {% endfor %}
-                        </ul>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-            </table>
+                <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-shadow">
+                    
+                    <!-- Group Header -->
+                    <div class="bg-gradient-to-r from-orange-500 to-orange-600 px-6 py-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="bg-white bg-opacity-20 p-2 rounded-lg">
+                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h2 class="text-2xl font-bold text-white">{{ group.name }}</h2>
+                                    <p class="text-orange-100">User Group</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center space-x-3">
+                                <span class="bg-white bg-opacity-20 text-white px-3 py-1 rounded-full text-sm font-medium">
+                                    {{ group.permissions.count }} Permission{{ group.permissions.count|pluralize }}
+                                </span>
+                                <div class="relative">
+                                    <button class="text-white hover:bg-white hover:bg-opacity-20 p-2 rounded-lg transition-colors" onclick="toggleGroupActions('{{ group.id }}')">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
+                                        </svg>
+                                    </button>
+                                    <div id="group-actions-{{ group.id }}" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-10">
+                                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-t-lg">Edit Group</a>
+                                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">View Members</a>
+                                        <a href="#" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-b-lg">Delete Group</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Group Content -->
+                    <div class="p-6">
+                        {% if group.permissions.all %}
+                            <div class="space-y-4">
+                                <div class="flex items-center justify-between">
+                                    <h3 class="text-lg font-semibold text-gray-800">Assigned Permissions</h3>
+                                    <button onclick="togglePermissions('{{ group.id }}')" class="text-orange-500 hover:text-orange-600 text-sm font-medium">
+                                        <span id="toggle-text-{{ group.id }}">Show All</span>
+                                        <svg id="toggle-icon-{{ group.id }}" class="w-4 h-4 inline ml-1 transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                                
+                                <!-- Permissions Grid -->
+                                <div id="permissions-{{ group.id }}" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                                    {% for permission in group.permissions.all %}
+                                        <div class="flex items-center p-3 bg-gray-50 rounded-lg border border-gray-200 {% if forloop.counter > 6 %}hidden group-permission-{{ group.id }}{% endif %}">
+                                            <div class="flex-shrink-0">
+                                                <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                                                    <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                            <div class="ml-3 flex-1 min-w-0">
+                                                <p class="text-sm font-medium text-gray-900 truncate">{{ permission.name }}</p>
+                                                <p class="text-xs text-gray-500 truncate">{{ permission.codename }}</p>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+
+                                <!-- Show More Indicator -->
+                                {% if group.permissions.count > 6 %}
+                                    <div id="show-more-{{ group.id }}" class="text-center pt-2">
+                                        <span class="text-sm text-gray-500">+{{ group.permissions.count|add:"-6" }} more permissions</span>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% else %}
+                            <!-- No Permissions State -->
+                            <div class="text-center py-8">
+                                <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <svg class="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.704-.833-2.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                                    </svg>
+                                </div>
+                                <h3 class="text-lg font-medium text-gray-900 mb-2">No Permissions Assigned</h3>
+                                <p class="text-gray-500 mb-4">This group doesn't have any specific permissions yet.</p>
+                                <button class="inline-flex items-center px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white text-sm font-medium rounded-lg transition-colors">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                    </svg>
+                                    Add Permissions
+                                </button>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% empty %}
+                <!-- Empty State -->
+                <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-12 text-center">
+                    <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                    </div>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">No Groups Found</h2>
+                    <p class="text-gray-600 mb-6">You haven't created any user groups yet. Start by creating your first group.</p>
+                    <a href="{% url 'create_group' %}" 
+                       class="inline-flex items-center px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg transition-colors shadow-md">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        Create Your First Group
+                    </a>
+                </div>
+            {% endfor %}
         </div>
     </div>
+
+    <script>
+        function togglePermissions(groupId) {
+            const permissions = document.querySelectorAll('.group-permission-' + groupId);
+            const toggleText = document.getElementById('toggle-text-' + groupId);
+            const toggleIcon = document.getElementById('toggle-icon-' + groupId);
+            const showMore = document.getElementById('show-more-' + groupId);
+            
+            const isHidden = permissions[0] && permissions[0].classList.contains('hidden');
+            
+            permissions.forEach(permission => {
+                permission.classList.toggle('hidden');
+            });
+            
+            if (isHidden) {
+                toggleText.textContent = 'Show Less';
+                toggleIcon.classList.add('rotate-180');
+                if (showMore) showMore.classList.add('hidden');
+            } else {
+                toggleText.textContent = 'Show All';
+                toggleIcon.classList.remove('rotate-180');
+                if (showMore) showMore.classList.remove('hidden');
+            }
+        }
+        
+        function toggleGroupActions(groupId) {
+            const actionsMenu = document.getElementById('group-actions-' + groupId);
+            actionsMenu.classList.toggle('hidden');
+        }
+        
+        // Close dropdown menus when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdowns = document.querySelectorAll('[id^="group-actions-"]');
+            dropdowns.forEach(dropdown => {
+                if (!dropdown.contains(event.target) && !event.target.closest('button')) {
+                    dropdown.classList.add('hidden');
+                }
+            });
+        });
+    </script>
 {% endblock content %}

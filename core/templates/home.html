@@ -1,63 +1,393 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Home{% endblock %}
+{% block title %}Eventzilla - Premium Event Management Platform{% endblock %}
+
+{% block meta_description %}Discover and create amazing events with Eventzilla - the most advanced event management platform for professionals{% endblock %}
 
 {% block content %}
-    {% comment %} banner {% endcomment %}
-    <div class="relative bg-cover bg-center h-[500px]" style="background-image: url('{% static 'image/event_bg.jpg' %}');">
-        <div class="absolute inset-0 bg-black opacity-50"></div>
-        <div class="absolute inset-0 flex justify-center items-center text-white">
-            <h1 class="text-7xl font-bold">Find Your Perfect Event</h1>
+    <!-- Hero Section -->
+    <section class="relative gradient-bg min-h-[700px] flex items-center justify-center overflow-hidden">
+        <!-- Background Pattern -->
+        <div class="absolute inset-0 opacity-20">
+            <div style="background-image: 
+                radial-gradient(circle at 25px 25px, rgba(255,255,255,0.1) 2px, transparent 0),
+                radial-gradient(circle at 75px 75px, rgba(255,255,255,0.1) 2px, transparent 0);
+                background-size: 100px 100px;"></div>
         </div>
-    </div>
-
-    {% comment %} search {% endcomment %}
-    <div class="bg-gray-100 p-8 text-center">
-        <h2 class="text-4xl font-bold text-gray-800 mb-4">We are Event Professionals</h2>
-        <p class="text-lg text-gray-600 mb-6">Find the best events, conferences, workshops, and more.</p>
-
         
-        <form method="GET" action="{% url 'home' %}" class="flex justify-center items-center">
-            <input type="text" name="search" value="{{ search_item }}" placeholder="Search events, locations..." class="px-4 py-2 w-2/3 sm:w-1/2 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400">
-            <button type="submit" class="bg-orange-500 text-white px-6 py-2 rounded-lg ml-4 hover:bg-orange-600">Search</button>
-        </form>
-    </div>
-    
-    {% comment %} search result box  {% endcomment %}
-    
-    {% if search_item %}
-        <h3 class="text-2xl font-semibold text-gray-800 mb-6">Search Results for "{{ search_item }}"</h3>
-        <div class="overflow-x-auto shadow rounded-lg bg-white ">
-            <table class="min-w-full bg-white text-left">
-                <thead>
-                    <tr>
-                        <th class="py-3 px-6 border-b text-left">Event Name</th>
-                        <th class="py-3 px-6 border-b text-center">Category</th>
-                        <th class="py-3 px-6 border-b text-center">Location</th>
-                        <th class="py-3 px-10 border-b text-center">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for event in events %}
-                    <tr class="hover:bg-gray-100">
-                        <td class="py-3 px-6 border-b text-left">{{ event.name }}</td>
-                        <td class="py-3 px-6 border-b text-center">{{ event.category.name }}</td>
-                        <td class="py-3 px-6 border-b text-center">{{ event.location }}</td>
-                        <td class="py-3 px-6 border-b text-center">
-                            <a href="{% url 'event_detail' event.id %}" class="text-blue-600 px-2 py-1 hover:shadow-md rounded-md hover:bg-blue-500 hover:text-white">Details</a> |
-                            <a href="{% url 'event_update' event.id %}" class="text-green-600 px-2 py-1 hover:shadow-md rounded-md hover:bg-green-500 hover:text-white">Edit</a> |
-                            <form method="POST" action="{% url 'event_delete' event.id %}" class="inline-block">
-                                {% csrf_token %}
-                                <button class="text-red-600 px-2 py-1 hover:shadow-md rounded-md hover:bg-red-500 hover:text-white">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-
+        <div class="absolute inset-0 bg-black/30"></div>
+        
+        <!-- Floating Elements -->
+        <div class="absolute top-20 left-10 w-20 h-20 bg-white/10 rounded-full animate-float"></div>
+        <div class="absolute top-32 right-20 w-16 h-16 bg-white/10 rounded-full animate-float" style="animation-delay: 2s;"></div>
+        <div class="absolute bottom-32 left-32 w-12 h-12 bg-white/10 rounded-full animate-float" style="animation-delay: 4s;"></div>
+        
+        <div class="relative z-10 text-center max-w-5xl mx-auto px-4">
+            <h1 class="text-6xl lg:text-8xl font-bold text-white mb-6 leading-tight">
+                Create Unforgettable
+                <span class="block text-yellow-300">Events</span>
+            </h1>
+            <p class="text-xl lg:text-2xl text-white/90 mb-8 max-w-3xl mx-auto leading-relaxed">
+                The most powerful event management platform that brings your vision to life with premium tools, analytics, and seamless user experience.
+            </p>
+            
+            <!-- CTA Buttons -->
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+                {% if request.user.is_authenticated %}
+                    <a href="{% url 'dashboard' %}" class="bg-white text-gray-900 px-8 py-4 rounded-full font-semibold hover:bg-gray-100 transform hover:scale-105 transition-all duration-300 shadow-lg">
+                        Go to Dashboard
+                    </a>
+                    <a href="{% url 'event_create' %}" class="border-2 border-white text-white px-8 py-4 rounded-full font-semibold hover:bg-white hover:text-gray-900 transform hover:scale-105 transition-all duration-300">
+                        Create Event
+                    </a>
+                {% else %}
+                    <a href="{% url 'sign_up' %}" class="bg-white text-gray-900 px-8 py-4 rounded-full font-semibold hover:bg-gray-100 transform hover:scale-105 transition-all duration-300 shadow-lg">
+                        Get Started Free
+                    </a>
+                    <a href="{% url 'sign_in' %}" class="border-2 border-white text-white px-8 py-4 rounded-full font-semibold hover:bg-white hover:text-gray-900 transform hover:scale-105 transition-all duration-300">
+                        Sign In
+                    </a>
+                {% endif %}
+            </div>
+            
+            <!-- Stats -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
+                <div class="text-center">
+                    <div class="text-3xl lg:text-4xl font-bold text-white" id="stat-events">0</div>
+                    <div class="text-white/80 text-sm lg:text-base">Events Created</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl lg:text-4xl font-bold text-white" id="stat-users">0</div>
+                    <div class="text-white/80 text-sm lg:text-base">Happy Users</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl lg:text-4xl font-bold text-white" id="stat-countries">0</div>
+                    <div class="text-white/80 text-sm lg:text-base">Countries</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl lg:text-4xl font-bold text-white" id="stat-satisfaction">0</div>
+                    <div class="text-white/80 text-sm lg:text-base">Satisfaction</div>
+                </div>
+            </div>
         </div>
+    </section>
+
+    <!-- Advanced Search Section -->
+    <section class="py-20 bg-gradient-to-br from-orange-50 via-white to-blue-50 relative overflow-hidden">
+        <div class="absolute inset-0 bg-white/50"></div>
+        <div class="max-w-6xl mx-auto px-4 relative z-10">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">Find Your Perfect Event</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                    Advanced search with intelligent filters to discover events that match your interests perfectly.
+                </p>
+            </div>
+            
+            <!-- Enhanced Search Form -->
+            <div class="max-w-5xl mx-auto">
+                <div class="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 border border-white/20">
+                    <form method="GET" action="{% url 'home' %}" class="space-y-8">
+                        <div class="grid md:grid-cols-3 gap-6">
+                            <div class="space-y-3">
+                                <label class="text-sm font-semibold text-gray-700 flex items-center">
+                                    <svg class="w-4 h-4 mr-2 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                    </svg>
+                                    What are you looking for?
+                                </label>
+                                <input type="text" name="search" value="{{ search_item }}" placeholder="Search events, workshops, conferences..." class="w-full px-4 py-4 rounded-xl border border-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all shadow-sm hover:shadow-md">
+                            </div>
+                            <div class="space-y-3">
+                                <label class="text-sm font-semibold text-gray-700 flex items-center">
+                                    <svg class="w-4 h-4 mr-2 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                    </svg>
+                                    Location
+                                </label>
+                                <input type="text" placeholder="City, venue, or online" class="w-full px-4 py-4 rounded-xl border border-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all shadow-sm hover:shadow-md">
+                            </div>
+                            <div class="space-y-3">
+                                <label class="text-sm font-semibold text-gray-700 flex items-center">
+                                    <svg class="w-4 h-4 mr-2 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                                    </svg>
+                                    Category
+                                </label>
+                                <select class="w-full px-4 py-4 rounded-xl border border-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all shadow-sm hover:shadow-md">
+                                    <option>All Categories</option>
+                                    <option>Business & Professional</option>
+                                    <option>Technology & Innovation</option>
+                                    <option>Arts & Culture</option>
+                                    <option>Sports & Fitness</option>
+                                    <option>Education & Learning</option>
+                                    <option>Food & Drink</option>
+                                    <option>Music & Entertainment</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div class="space-y-3">
+                                <label class="text-sm font-semibold text-gray-700 flex items-center">
+                                    <svg class="w-4 h-4 mr-2 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    </svg>
+                                    Date Range
+                                </label>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <input type="date" class="px-4 py-4 rounded-xl border border-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all shadow-sm hover:shadow-md">
+                                    <input type="date" class="px-4 py-4 rounded-xl border border-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all shadow-sm hover:shadow-md">
+                                </div>
+                            </div>
+                            <div class="space-y-3">
+                                <label class="text-sm font-semibold text-gray-700 flex items-center">
+                                    <svg class="w-4 h-4 mr-2 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                                    </svg>
+                                    Price Range
+                                </label>
+                                <select class="w-full px-4 py-4 rounded-xl border border-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all shadow-sm hover:shadow-md">
+                                    <option>Any Price</option>
+                                    <option>Free Events</option>
+                                    <option>$1 - $50</option>
+                                    <option>$51 - $100</option>
+                                    <option>$101 - $200</option>
+                                    <option>$200+</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white px-8 py-5 rounded-xl font-bold text-lg hover:from-orange-600 hover:to-orange-700 transform hover:scale-[1.02] transition-all duration-300 shadow-lg hover:shadow-xl">
+                            <span class="flex items-center justify-center">
+                                <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                </svg>
+                                Search Amazing Events
+                            </span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Search Results Section -->
+    {% if search_item %}
+        <section class="py-16 bg-white">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h3 class="text-3xl font-bold text-gray-900 mb-4">Search Results for "{{ search_item }}"</h3>
+                    <p class="text-lg text-gray-600">Found {{ events|length }} event{{ events|length|pluralize }} matching your search</p>
+                </div>
+                
+                {% if events %}
+                    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {% for event in events %}
+                            <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover border border-gray-100">
+                                <div class="relative">
+                                    {% if event.asset %}
+                                        <img src="{{ event.asset.url }}" alt="{{ event.name }}" class="w-full h-48 object-cover">
+                                    {% else %}
+                                        <div class="w-full h-48 bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center">
+                                            <svg class="w-16 h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                            </svg>
+                                        </div>
+                                    {% endif %}
+                                    <div class="absolute top-4 right-4">
+                                        <span class="bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-semibold">Featured</span>
+                                    </div>
+                                    <div class="absolute bottom-4 left-4">
+                                        <span class="bg-black/50 text-white px-3 py-1 rounded-full text-sm backdrop-blur-sm">{{ event.category.name }}</span>
+                                    </div>
+                                </div>
+                                <div class="p-6">
+                                    <div class="flex items-center justify-between mb-3">
+                                        <span class="text-orange-600 font-semibold text-sm">{{ event.date|date:"M d, Y" }}</span>
+                                        <div class="flex items-center text-gray-500 text-sm">
+                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                            </svg>
+                                            {{ event.location|truncatechars:15 }}
+                                        </div>
+                                    </div>
+                                    <h3 class="text-xl font-bold text-gray-900 mb-2">{{ event.name|truncatechars:40 }}</h3>
+                                    <p class="text-gray-600 mb-4 text-sm leading-relaxed">{{ event.description|truncatechars:80 }}</p>
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center">
+                                            <div class="text-sm text-gray-500">
+                                                {{ event.participants.count }} attending
+                                            </div>
+                                        </div>
+                                        <div class="space-x-2">
+                                            <a href="{% url 'event_detail' event.id %}" class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors text-sm font-medium">
+                                                View Details
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-12">
+                        <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.521.901-6.172 2.379C5.90818.122 5.90818.122 4.243 16.172A7.962 7.962 0 012 12.5c0-4.418 3.582-8 8-8s8 3.582 8 8a7.962 7.962 0 01-2.243 3.672z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">No events found</h3>
+                        <p class="text-gray-600 mb-6">Try adjusting your search terms or browse all events</p>
+                        <a href="{% url 'event_list' %}" class="bg-orange-500 text-white px-6 py-3 rounded-lg hover:bg-orange-600 transition-colors font-medium">
+                            Browse All Events
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </section>
     {% endif %}
 
+    <!-- Features Section -->
+    <section class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">Why Choose Eventzilla?</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                    Experience the most advanced event management platform with cutting-edge features designed for modern event organizers.
+                </p>
+            </div>
+            
+            <div class="grid lg:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="text-center group">
+                    <div class="w-20 h-20 bg-gradient-to-br from-orange-400 to-orange-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Advanced Analytics</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Get deep insights into your events with real-time analytics, attendance tracking, and comprehensive reporting dashboards.
+                    </p>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="text-center group">
+                    <div class="w-20 h-20 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Mobile-First Design</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Seamless experience across all devices with our responsive design and intuitive mobile interface.
+                    </p>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="text-center group">
+                    <div class="w-20 h-20 bg-gradient-to-br from-green-400 to-green-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Lightning Fast</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Optimized performance with instant loading, real-time updates, and seamless user interactions.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-20 bg-gradient-to-r from-orange-500 to-orange-600">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h2 class="text-4xl lg:text-5xl font-bold text-white mb-6">Ready to Get Started?</h2>
+            <p class="text-xl text-white/90 mb-8 leading-relaxed">
+                Join thousands of event organizers who trust Eventzilla to create extraordinary experiences.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                {% if not request.user.is_authenticated %}
+                    <a href="{% url 'sign_up' %}" class="bg-white text-orange-600 px-8 py-4 rounded-full font-bold text-lg hover:bg-gray-100 transform hover:scale-105 transition-all duration-300 shadow-lg">
+                        Start Free Trial
+                    </a>
+                    <a href="{% url 'event_list' %}" class="border-2 border-white text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-white hover:text-orange-600 transform hover:scale-105 transition-all duration-300">
+                        Browse Events
+                    </a>
+                {% else %}
+                    <a href="{% url 'event_create' %}" class="bg-white text-orange-600 px-8 py-4 rounded-full font-bold text-lg hover:bg-gray-100 transform hover:scale-105 transition-all duration-300 shadow-lg">
+                        Create Your First Event
+                    </a>
+                    <a href="{% url 'dashboard' %}" class="border-2 border-white text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-white hover:text-orange-600 transform hover:scale-105 transition-all duration-300">
+                        Go to Dashboard
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Counter Animation for Hero Stats
+    function animateCounter(elementId, target, suffix = '') {
+        const element = document.getElementById(elementId);
+        const duration = 2000;
+        const increment = target / (duration / 16);
+        let current = 0;
+        
+        const timer = setInterval(() => {
+            current += increment;
+            if (current >= target) {
+                element.textContent = target.toLocaleString() + suffix;
+                clearInterval(timer);
+            } else {
+                element.textContent = Math.floor(current).toLocaleString() + suffix;
+            }
+        }, 16);
+    }
+
+    // Intersection Observer for hero stats
+    const heroSection = document.querySelector('.gradient-bg');
+    const observer = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+            animateCounter('stat-events', 15000, '+');
+            animateCounter('stat-users', 50000, '+');
+            animateCounter('stat-countries', 25, '+');
+            animateCounter('stat-satisfaction', 99, '%');
+            observer.unobserve(heroSection);
+        }
+    });
+    
+    if (heroSection) {
+        observer.observe(heroSection);
+    }
+
+    // Enhanced card hover effects
+    const cards = document.querySelectorAll('.card-hover');
+    cards.forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            card.style.boxShadow = '0 25px 50px -12px rgba(0, 0, 0, 0.25)';
+        });
+        
+        card.addEventListener('mouseleave', () => {
+            card.style.boxShadow = '';
+        });
+    });
+
+    // Parallax effect for floating elements
+    window.addEventListener('scroll', () => {
+        const scrolled = window.pageYOffset;
+        const parallax = document.querySelectorAll('.animate-float');
+        const speed = 0.5;
+
+        parallax.forEach(element => {
+            const yPos = -(scrolled * speed);
+            element.style.transform = `translate3d(0, ${yPos}px, 0)`;
+        });
+    });
+</script>
 {% endblock %}
