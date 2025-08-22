@@ -20,7 +20,7 @@ class Event(models.Model):
         related_name='events'
     )
     asset = models.ImageField(
-        upload_to='event_asset', 
+        upload_to='event_asset/', 
         blank=True, 
         null=True, 
         default='event_asset/default_img.png'
