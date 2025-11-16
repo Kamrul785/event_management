@@ -20,6 +20,8 @@ CSRF_TRUSTED_ORIGINS= ['https://*.onrender.com','http://127.0.0.1:8000']
 TIME_ZONE = 'Asia/Dhaka'
 AUTH_USER_MODEL = 'users.CustomUser'
 
+ALLOWED_HOSTS = [".vercel.app","127.0.0.1"]
+
 # Application definition
 
 INSTALLED_APPS = [
