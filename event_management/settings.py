@@ -100,14 +100,27 @@ WSGI_APPLICATION = 'event_management.wsgi.application'
 
 # for render
 
-DATABASES = {
-    'default': dj_database_url.config(
-        # Replace this value with your local database's connection string.
-        default='postgresql://event_management_db_3kbk_user:iawICht3QKDwy9gQb2BNsDX5cYFZOCaL@dpg-d2bg8eidbo4c73aqbkc0-a.oregon-postgres.render.com/event_management_db_3kbk',
-        conn_max_age=600
-    )
-}
+# DATABASES = {
+#     'default': dj_database_url.config(
+#         # Replace this value with your local database's connection string.
+#         default='postgresql://event_management_db_3kbk_user:iawICht3QKDwy9gQb2BNsDX5cYFZOCaL@dpg-d2bg8eidbo4c73aqbkc0-a.oregon-postgres.render.com/event_management_db_3kbk',
+#         conn_max_age=600
+#     )
+# }
 
+
+# for vercel 
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config('dbname'),
+        'USER': config('user'),
+        'PASSWORD': config('password'),
+        'HOST': config('host'),
+        'PORT': config('port')
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
