@@ -242,25 +242,10 @@ class EditProfileView(UpdateView):
     def get_object(self):
         return self.request.user
     
-    def post(self, request, *args, **kwargs):
-        from django.conf import settings
-        # On production (Vercel), remove profile_image from POST/FILES before form processing
-        # because the filesystem is read-only
-        if not settings.DEBUG:
-            post_copy = request.POST.copy()
-            post_copy.pop('profile_image', None)
-            request.POST = post_copy
-            
-            files_copy = request.FILES.copy()
-            files_copy.pop('profile_image', None)
-            request.FILES = files_copy
-        
-        return super().post(request, *args, **kwargs)
-    
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
         from django.conf import settings
-        # Remove profile_image field from form on production
+        # Skip profile image uploads on production (Vercel has ephemeral filesystem)
         if not settings.DEBUG:
             form.fields.pop('profile_image', None)
         return form
