@@ -9,18 +9,25 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-)k2!2h$xbwd9^&1%_hk)q#dtz3g&_u6!_ge(q#l)&*)&9z_(7+'
+SECRET_KEY = config('SECRET_KEY', default='django-insecure-change-me')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS= ['https://*.onrender.com','http://127.0.0.1:8000']
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost',
+    '.vercel.app',
+    'event-management-six-lime.vercel.app',
+]
+CSRF_TRUSTED_ORIGINS = [
+    'https://*.vercel.app',
+    'https://event-management-six-lime.vercel.app',
+    'http://127.0.0.1:8000',
+]
 
 TIME_ZONE = 'Asia/Dhaka'
 AUTH_USER_MODEL = 'users.CustomUser'
-
-ALLOWED_HOSTS = [".vercel.app","127.0.0.1"]
 
 # Application definition
 
@@ -34,12 +41,13 @@ INSTALLED_APPS = [
     'core',
     'events',
     'users',
-    "debug_toolbar",
     "widget_tweaks",
 ]
 
+if DEBUG:
+    INSTALLED_APPS.append("debug_toolbar")
+
 MIDDLEWARE = [
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -48,6 +56,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+if DEBUG:
+    MIDDLEWARE.insert(0, "debug_toolbar.middleware.DebugToolbarMiddleware")
 
 INTERNAL_IPS = [
     # ...
@@ -72,7 +83,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'event_management.wsgi.app'
+WSGI_APPLICATION = 'event_management.wsgi.application'
 
 
 # Database
@@ -108,18 +119,39 @@ WSGI_APPLICATION = 'event_management.wsgi.app'
 #     )
 # }
 
+# for supabase
+def get_config_value(*names, default=None):
+    for name in names:
+        value = config(name, default=None)
+        if value not in (None, ''):
+            return value
+    return default
 
-# for vercel 
+
+database_url = get_config_value('DATABASE_URL')
+db_user = get_config_value('DB_USER', 'user')
+db_password = get_config_value('DB_PASSWORD', 'password')
+db_host = get_config_value('DB_HOST', 'host')
+db_port = get_config_value('DB_PORT', 'port')
+db_name = get_config_value('DB_NAME', 'dbname')
+is_supabase_database = bool(
+    (database_url and 'supabase.co' in database_url)
+    or (db_host and 'supabase.co' in db_host)
+)
+
+if not database_url and all([db_user, db_password, db_host, db_port, db_name]):
+    database_url = f"postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
+
+if not DEBUG and not database_url:
+    raise ValueError('DATABASE_URL or DB_* database variables must be set in production.')
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('dbname'),
-        'USER': config('user'),
-        'PASSWORD': config('password'),
-        'HOST': config('host'),
-        'PORT': config('port')
-    }
+    'default': dj_database_url.config(
+        default=database_url or f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
+        conn_max_age=600,
+        conn_health_checks=True,
+        ssl_require=is_supabase_database,
+    )
 }
 
 # Password validation
@@ -146,8 +178,6 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
-
 USE_I18N = True
 
 USE_TZ = True
@@ -160,15 +190,13 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static'
 ]
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
-
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -179,7 +207,11 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'kamrulkhan526785@gmail.com' 
 EMAIL_HOST_PASSWORD = 'dpsq apqq jzeo visr'
 
-FRONTEND_URL = 'https://event-management-cj2i.onrender.com/'
+# Frontend URL for activation links and redirects
+if DEBUG:
+    FRONTEND_URL = config('FRONTEND_URL', default='http://localhost:8000/')
+else:
+    FRONTEND_URL = config('FRONTEND_URL', default='https://event-management-six-lime.vercel.app/')
 
 
 LOGIN_URL = 'sign_in'

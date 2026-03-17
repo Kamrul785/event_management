@@ -22,7 +22,7 @@ User = get_user_model()
 #test for user
 
 def is_admin(user):
-    return user.groups.filter(name='Admin').exists()
+    return user.is_superuser or user.is_staff or user.groups.filter(name='Admin').exists()
 
 
 def profile_view(request):

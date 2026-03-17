@@ -11,7 +11,8 @@ urlpatterns = [
     path('events/',include("events.urls")),
     path('users/',include("users.urls")),
     path('no_permission/', no_permission, name='no_permission')
-] + debug_toolbar_urls()
+] 
  
- 
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+if settings.DEBUG:
+    urlpatterns += debug_toolbar_urls()
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
