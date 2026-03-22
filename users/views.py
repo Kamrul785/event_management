@@ -242,14 +242,6 @@ class EditProfileView(UpdateView):
     def get_object(self):
         return self.request.user
     
-    def get_form(self, form_class=None):
-        form = super().get_form(form_class)
-        from django.conf import settings
-        # Skip profile image uploads on production (Vercel has ephemeral filesystem)
-        if not settings.DEBUG:
-            form.fields.pop('profile_image', None)
-        return form
-    
     def form_valid(self, form):
         form.save()
         messages.success(self.request, 'Profile updated successfully!')
