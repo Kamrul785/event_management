@@ -204,51 +204,19 @@ python populate_db.py
 
 This will create sample categories, events, and participants using Faker.
 
-### 6. Create Groups & Permissions (important!)
-
-```bash
-python manage.py shell
-```
-
-Inside the shell:
-
-```python
-from django.contrib.auth.models import Group, Permission
-from django.contrib.contenttypes.models import ContentType
-from events.models import Event, Category
-
-# Create groups
-admin_group, _ = Group.objects.get_or_create(name='Admin')
-organizer_group, _ = Group.objects.get_or_create(name='Organizer')
-participant_group, _ = Group.objects.get_or_create(name='Participant')
-
-# Add permissions to Organizer
-event_ct = ContentType.objects.get_for_model(Event)
-for codename in ['add_event', 'change_event', 'delete_event', 'view_event']:
-    perm = Permission.objects.get(content_type=event_ct, codename=codename)
-    organizer_group.permissions.add(perm)
-
-# Add view permission to Participant
-view_event = Permission.objects.get(content_type=event_ct, codename='view_event')
-participant_group.permissions.add(view_event)
-
-print("Groups created successfully!")
-exit()
-```
-
-### 7. Create a Superuser
+### 6. Create a Superuser
 
 ```bash
 python manage.py createsuperuser
 ```
 
-### 8. (Optional) Collect Static Files
+### 7. (Optional) Collect Static Files
 
 ```bash
 python manage.py collectstatic
 ```
 
-### 9. Run the Development Server
+### 8. Run the Development Server
 
 ```bash
 python manage.py runserver
@@ -264,9 +232,8 @@ Visit **[http://127.0.0.1:8000](http://127.0.0.1:8000)** in your browser. 🎉
 
 | Role | Username | Password |
 |---|---|---|
-| **Admin** | `admin` | `Admin@1234` |
-| **Organizer** | `organizer` | `Organizer@1234` |
-| **Participant** | `participant` | `Participant@1234` |
+| **Admin** | `admin` | `@dmin526785` |
+| **Participant** | `kamrulhasan` | `K@mrul333` |
 
 > ⚠️ Demo data may be reset periodically. Please don't change credentials.
 
