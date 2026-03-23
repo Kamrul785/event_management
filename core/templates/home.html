@@ -248,6 +248,52 @@
         </section>
     {% endif %}
 
+    <!-- How It Works Section -->
+    <section class="py-20 bg-gradient-to-br from-slate-50 via-white to-orange-50">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">How It Works</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                    Launch and manage successful events in three simple steps.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 card-hover">
+                    <div class="w-14 h-14 rounded-xl bg-orange-100 text-orange-600 font-bold text-2xl flex items-center justify-center mb-6">1</div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Create Event</h3>
+                    <p class="text-gray-600 leading-relaxed mb-6">
+                        Set event details, upload assets, and publish your event page in minutes.
+                    </p>
+                    {% if request.user.is_authenticated %}
+                        <a href="{% url 'event_create' %}" class="text-orange-600 font-semibold hover:text-orange-700 transition-colors">Create now</a>
+                    {% else %}
+                        <a href="{% url 'sign_up' %}" class="text-orange-600 font-semibold hover:text-orange-700 transition-colors">Get started</a>
+                    {% endif %}
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 card-hover">
+                    <div class="w-14 h-14 rounded-xl bg-blue-100 text-blue-600 font-bold text-2xl flex items-center justify-center mb-6">2</div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Invite Participants</h3>
+                    <p class="text-gray-600 leading-relaxed mb-6">
+                        Share your event and track participant interest with an organized attendee flow.
+                    </p>
+                    <a href="{% url 'participant_list' %}" class="text-blue-600 font-semibold hover:text-blue-700 transition-colors">View participants</a>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 card-hover">
+                    <div class="w-14 h-14 rounded-xl bg-green-100 text-green-600 font-bold text-2xl flex items-center justify-center mb-6">3</div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Manage & Grow</h3>
+                    <p class="text-gray-600 leading-relaxed mb-6">
+                        Monitor activity, optimize your event strategy, and scale with confidence.
+                    </p>
+                    <a href="{% url 'dashboard' %}" class="text-green-600 font-semibold hover:text-green-700 transition-colors">Go to dashboard</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    
     <!-- Features Section -->
     <section class="py-20 bg-white">
         <div class="max-w-7xl mx-auto px-4">
