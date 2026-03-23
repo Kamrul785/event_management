@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}About - Eventzilla{% endblock %}
+{% block meta_description %}Learn what Eventzilla is and why it was built.{% endblock %}
+
+{% block content %}
+<section class="bg-gradient-to-br from-orange-50 via-white to-blue-50 py-16 lg:py-24">
+    <div class="max-w-6xl mx-auto px-4">
+        <div class="text-center mb-14">
+            <p class="text-sm uppercase tracking-[0.2em] text-orange-600 font-semibold mb-3">About Eventzilla</p>
+            <h1 class="text-4xl lg:text-6xl font-bold text-gray-900 mb-6">Built To Make Event Management Easy And Professional</h1>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                Eventzilla is an event management platform where organizers can create events, manage categories, track participants,
+                and operate everything from one clean dashboard.
+            </p>
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-8">
+            <div class="bg-white rounded-2xl border border-gray-100 shadow-lg p-8">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4">What This Project Is</h2>
+                <p class="text-gray-600 leading-relaxed mb-4">
+                    This Django project is designed as a complete event workflow system for planning and running events. It centralizes
+                    event data, participant records, and organizer actions in one place so teams can work faster and with fewer mistakes.
+                </p>
+                <ul class="space-y-3 text-gray-700">
+                    <li class="flex items-start"><span class="text-orange-600 mr-2">•</span>Create and publish events</li>
+                    <li class="flex items-start"><span class="text-orange-600 mr-2">•</span>Organize content by categories</li>
+                    <li class="flex items-start"><span class="text-orange-600 mr-2">•</span>Manage participant information</li>
+                    <li class="flex items-start"><span class="text-orange-600 mr-2">•</span>Use role-based dashboards for daily operations</li>
+                </ul>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-gray-100 shadow-lg p-8">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4">Why It Was Built</h2>
+                <p class="text-gray-600 leading-relaxed mb-4">
+                    Eventzilla was built to solve a common problem: managing events manually across spreadsheets, chats, and scattered notes.
+                    The goal is to provide a practical, user-friendly product where organizers can focus on event quality instead of repetitive admin work.
+                </p>
+                <p class="text-gray-600 leading-relaxed">
+                    Beyond functionality, this project also demonstrates modern Django architecture, reusable templates, and responsive UI practices
+                    for real-world web application development.
+                </p>
+            </div>
+        </div>
+
+        <div class="mt-10 text-center">
+            <a href="{% url 'event_list' %}" class="inline-flex items-center bg-orange-500 text-white px-6 py-3 rounded-xl font-semibold hover:bg-orange-600 transition-colors">
+                Explore Events
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}
