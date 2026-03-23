@@ -331,7 +331,7 @@ event-management/
 
 Here's what I'd build next to make Eventzilla production-grade:
 
-- [ ] **Ticket System** — Paid tickets with Stripe integration and QR code generation
+- [ ] **Ticket System** — Paid tickets with payment gateway integration and QR code generation
 - [ ] **Event Comments & Ratings** — Let participants leave feedback after events
 - [ ] **Calendar View** — Interactive calendar with drag-and-drop event scheduling
 - [ ] **Real-time Notifications** — Django Channels + WebSockets for live RSVP alerts
