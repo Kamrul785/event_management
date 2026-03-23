@@ -20,23 +20,24 @@
 > Below is a visual walkthrough of the key pages in Eventzilla.
 
 ### 🏠 Home Page — Hero Section
-![Home Page](https://via.placeholder.com/900x450/f97316/ffffff?text=Eventzilla+Home+Page)
+![Home Page](screenshots/HomePage.png)
 > Animated gradient hero with stats counter, CTA buttons, and advanced event search.
 
 ### 📋 Event List
-![Event List](https://via.placeholder.com/900x450/3b82f6/ffffff?text=Event+List+Page)
+![Event List](screenshots/Features.png)
 > Filter by category, date range. Each card shows image, category badge, location, and participant count.
 
 ### 📊 Organizer Dashboard
-![Organizer Dashboard](https://via.placeholder.com/900x450/8b5cf6/ffffff?text=Organizer+Dashboard)
+![Organizer Dashboard](screenshots/AdminDashboard.png)
 > Stats cards for total, upcoming, and past events. Today's events table and full event management table.
 
 ### 👤 Participant Dashboard
-![Participant Dashboard](https://via.placeholder.com/900x450/10b981/ffffff?text=Participant+Dashboard)
+![Participant Dashboard](screenshots/UserDashboard.png)
 > Personal RSVP stats, quick actions, and upcoming registered events.
 
 ### 🔐 Authentication Pages
-![Login Page](https://via.placeholder.com/900x450/ea580c/ffffff?text=Login+%2F+Register+Pages)
+![Login Page](screenshots/Login.png)
+![Registration Page](screenshots/Registration.png)
 > Clean sign-in and registration forms with inline validation and password strength rules.
 
 ---
@@ -111,12 +112,12 @@
 | **Frontend** | HTML5, Tailwind CSS (CDN), Vanilla JS |
 | **Auth** | Django Auth + Custom User Model |
 | **Email** | Gmail SMTP via Django email backend |
-| **Storage** | Local media (dev) / Vercel ephemeral (prod) |
+| **Storage** | Local media (dev) / Cloudinary (prod, optional) / Vercel ephemeral fallback |
 | **Deployment** | Vercel (serverless WSGI) |
 | **ORM** | Django ORM with `select_related`, `annotate` |
 | **Forms** | Django ModelForms with custom styled mixin |
 | **Templates** | Django Template Language (DTL) |
-| **Extras** | django-widget-tweaks, dj-database-url, python-decouple |
+| **Extras** | django-widget-tweaks, dj-database-url, python-decouple, cloudinary, django-cloudinary-storage |
 
 ---
 
@@ -131,7 +132,7 @@
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/event-management.git
+git clone https://github.com/Kamrul785/event-management.git
 cd event-management
 ```
 
@@ -166,7 +167,20 @@ EMAIL_HOST_USER=your-gmail@gmail.com
 EMAIL_HOST_PASSWORD=your-app-password
 
 # Database (leave blank to use SQLite in dev)
+# Option 1: Single DATABASE_URL
 # DATABASE_URL=postgresql://user:password@host:port/dbname
+
+# Option 2: Individual database variables (for Supabase)
+# DB_USER=your_user
+# DB_PASSWORD=your_password
+# DB_HOST=your_host.supabase.co
+# DB_PORT=5432
+# DB_NAME=your_dbname
+
+# Cloudinary (optional, for image storage in production)
+# CLOUDINARY_CLOUD_NAME=your_cloud_name
+# CLOUDINARY_API_KEY=your_api_key
+# CLOUDINARY_API_SECRET=your_api_secret
 
 FRONTEND_URL=http://localhost:8000/
 ```
@@ -181,6 +195,14 @@ FRONTEND_URL=http://localhost:8000/
 ```bash
 python manage.py migrate
 ```
+
+### 5a. (Optional) Seed Database with Sample Data
+
+```bash
+python populate_db.py
+```
+
+This will create sample categories, events, and participants using Faker.
 
 ### 6. Create Groups & Permissions (important!)
 
@@ -256,16 +278,20 @@ Visit **[http://127.0.0.1:8000](http://127.0.0.1:8000)** in your browser. 🎉
 event-management/
 │
 ├── event_management/           # Django project settings
-│   ├── settings.py             # Main config (DB, email, auth, static)
+│   ├── settings.py             # Main config (DB, email, auth, static, Cloudinary)
 │   ├── urls.py                 # Root URL configuration
 │   ├── wsgi.py                 # WSGI entry point (Vercel)
 │   └── asgi.py
 │
-├── core/                       # Core app (home, no_permission views)
-│   ├── views.py
+├── core/                       # Core app (home, about, contact, legal pages)
+│   ├── views.py                # Home, help center, API docs, privacy/terms, etc.
 │   └── templates/
 │       ├── base.html           # Master layout (nav, footer, flash messages)
 │       ├── home.html           # Landing page with hero + search
+│       ├── about.html          # About page
+│       ├── contact.html        # Contact form (POST enabled)
+│       ├── content_page.html   # Reusable template for legal/help pages
+│       ├── 404.html            # Custom 404 error page
 │       ├── logged_nav.html     # Nav for authenticated users
 │       ├── non_logged_nav.html # Nav for guests
 │       └── no_permission.html  # 403-style access denied page
@@ -315,9 +341,19 @@ event-management/
 │           └── group_list.html
 │
 ├── static/                     # Static assets (CSS, JS, images)
-├── media/                      # User-uploaded files (dev only)
+├── media/                      # User-uploaded files (dev only, Cloudinary in prod)
+├── screenshots/                # Project screenshots for README
+│   ├── HomePage.png
+│   ├── Features.png
+│   ├── AdminDashboard.png
+│   ├── UserDashboard.png
+│   ├── Login.png
+│   ├── Registration.png
+│   ├── dashboard.png
+│   └── profile.png
 ├── requirements.txt
 ├── manage.py
+├── populate_db.py              # Script to seed database with sample data (Faker)
 ├── vercel.json                 # Vercel deployment config
 └── .env                        # Environment variables (not committed)
 ```
@@ -337,7 +373,6 @@ Here's what I'd build next to make Eventzilla production-grade:
 - [ ] **Social Login** — Google / GitHub OAuth via `django-allauth`
 - [ ] **REST API** — Django REST Framework API for a future React/Next.js frontend
 - [ ] **Map Integration** — Google Maps embed on event detail pages
-- [ ] **Image CDN** — Cloudinary or AWS S3 for persistent media in production
 - [ ] **Multi-language Support** — Django i18n for Bengali + English
 - [ ] **PWA Support** — Service worker + manifest for offline access on mobile
 
@@ -347,9 +382,9 @@ Here's what I'd build next to make Eventzilla production-grade:
 
 **Kamrul Khan**
 
-- 🌐 Portfolio: [your-portfolio.com](https://your-portfolio.com)
-- 💼 LinkedIn: [linkedin.com/in/yourprofile](https://linkedin.com/in/yourprofile)
-- 🐙 GitHub: [github.com/yourusername](https://github.com/yourusername)
+- 🌐 Portfolio: [https://kamrulhasan-henna.vercel.app/](https://kamrulhasan-henna.vercel.app/)
+- 💼 LinkedIn: [https://www.linkedin.com/in/kamrulhasan7/](https://www.linkedin.com/in/kamrulhasan7/)
+- 🐙 GitHub: [http://github.com/Kamrul785/](http://github.com/Kamrul785/)
 - 📧 Email: kamrulkhan526785@gmail.com
 
 ---
