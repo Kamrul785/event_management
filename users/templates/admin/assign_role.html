@@ -81,7 +81,9 @@
                 <form method="POST" class="space-y-4">
                     {% csrf_token %}
                     {{ form.as_p }}
-                    <button type="submit" class="px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 focus:outline-none">Assign Role</button>
+                    <button type="submit" class="inline-flex items-center px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg transition-colors shadow-md">
+                        Assign Role
+                    </button>
                 </form>
 
                 <!-- Warning Notice -->

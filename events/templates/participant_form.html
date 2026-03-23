@@ -142,14 +142,14 @@
 
                 <!-- Submit Button -->
                 <div class="mb-4 flex flex-col sm:flex-row gap-3">
-                    <button type="submit" class="bg-orange-500 text-white px-6 py-2 rounded-lg shadow-sm hover:shadow-lg cursor-pointer transition duration-300 flex-1 sm:flex-none">
+                    <button type="submit" class="btn-primary flex-1 sm:flex-none">
                         {% if participant_form.instance.pk %}
                             Update Participant
                         {% else %}
                             Save Participant
                         {% endif %}
                     </button>
-                    <a href="{% url 'participant_list' %}" class="bg-gray-500 text-white px-6 py-2 rounded-lg shadow-sm hover:shadow-lg cursor-pointer transition duration-300 text-center">
+                    <a href="{% url 'participant_list' %}" class="btn-secondary text-center">
                         Cancel
                     </a>
                 </div>

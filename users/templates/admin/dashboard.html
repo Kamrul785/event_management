@@ -179,21 +179,53 @@
     </main>
 
     <script>
+        const menuToggle = document.getElementById("menu-toggle");
+        const mobileMenu = document.getElementById("mobile-menu");
+        const userMenuButton = document.getElementById("user-menu-button");
+        const userMenu = document.getElementById("user-menu");
+
         // Mobile menu toggle
-        document.getElementById("menu-toggle").addEventListener("click", function () {
-            document.getElementById("mobile-menu").classList.toggle("hidden");
-        });
+        if (menuToggle && mobileMenu) {
+            menuToggle.addEventListener("click", function () {
+                mobileMenu.classList.toggle("hidden");
+            });
+        }
 
         // User menu toggle
-        document.getElementById("user-menu-button").addEventListener("click", function () {
-            document.getElementById("user-menu").classList.toggle("hidden");
-        });
+        if (userMenuButton && userMenu) {
+            userMenuButton.addEventListener("click", function () {
+                userMenu.classList.toggle("hidden");
+            });
 
-        // Close user menu when clicking outside
-        window.addEventListener("click", function (e) {
-            if (!document.getElementById("user-menu-button").contains(e.target)) {
-                document.getElementById("user-menu").classList.add("hidden");
-            }
+            // Close user menu when clicking outside
+            window.addEventListener("click", function (e) {
+                if (!userMenuButton.contains(e.target)) {
+                    userMenu.classList.add("hidden");
+                }
+            });
+        }
+
+        // Prevent double submission and show loading feedback on POST forms.
+        const postForms = document.querySelectorAll('form[method="post"], form[method="POST"]');
+        postForms.forEach((form) => {
+            form.addEventListener('submit', () => {
+                if (form.dataset.submitting === 'true') {
+                    return;
+                }
+                form.dataset.submitting = 'true';
+
+                const submitButtons = form.querySelectorAll('button[type="submit"], input[type="submit"]');
+                submitButtons.forEach((button) => {
+                    button.disabled = true;
+                    button.classList.add('opacity-70', 'cursor-not-allowed');
+
+                    if (button.tagName === 'BUTTON') {
+                        button.innerHTML = 'Processing...';
+                    } else if (button.tagName === 'INPUT') {
+                        button.value = 'Processing...';
+                    }
+                });
+            });
         });
     </script>
 </body>
